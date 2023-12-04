@@ -1,0 +1,12 @@
+ThreadID()::Level()::getThrownClassName()::getSourceClassName()::getSourceMethodName():: Date()::getMessage()
+1::SEVERE::SQLIntegrityConstraintViolationException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Duplicate entry 'Coka' for key 'products.designation_UNIQUE'
+1::SEVERE::NullPointerException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Cannot invoke "java.sql.ResultSet.close()" because "rs" is null
+1::SEVERE::SQLIntegrityConstraintViolationException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Duplicate entry 'Fanta' for key 'products.designation_UNIQUE'
+1::SEVERE::NullPointerException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Cannot invoke "java.sql.ResultSet.close()" because "rs" is null
+1::SEVERE::SQLIntegrityConstraintViolationException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Duplicate entry 'Sprite' for key 'products.designation_UNIQUE'
+1::SEVERE::NullPointerException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Cannot invoke "java.sql.ResultSet.close()" because "rs" is null
+1::SEVERE::SQLIntegrityConstraintViolationException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Duplicate entry 'Banana' for key 'products.designation_UNIQUE'
+1::SEVERE::NullPointerException::ci.inventory.dao.ProductsDao::create::Sun Dec 03 18:23:00 CST 2023::Cannot invoke "java.sql.ResultSet.close()" because "rs" is null
+1::INFO::No Thrown class::ci.inventory.dao.ProductsDao::getAll::Sun Dec 03 18:23:00 CST 2023::Products list retrieved
+1::INFO::No Thrown class::ci.inventory.dao.ProductsDao::getById::Sun Dec 03 18:23:03 CST 2023::Products with id 1 retrieved
+1::INFO::No Thrown class::ci.inventory.dao.ProductsDao::getAll::Sun Dec 03 18:23:05 CST 2023::Products list retrieved
