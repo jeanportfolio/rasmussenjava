@@ -1,5 +1,6 @@
+<%@page import="ci.inventory.entity.Users"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<% Users connectUser = (Users)session.getAttribute("user"); %>
     <!-- Topbar header - style you can find in pages.scss -->
     
     <header class="topbar" data-navbarbg="skin6">
@@ -69,9 +70,7 @@
                                                     data-feather="airplay" class="text-white"></i></div>
                                             <div class="w-75 d-inline-block v-middle pl-2">
                                                 <h6 class="message-title mb-0 mt-1">Luanch Admin</h6>
-                                                <span class="font-12 text-nowrap d-block text-muted">Just see
-                                                    the my new
-                                                    admin!</span>
+                                                <span class="font-12 text-nowrap d-block text-muted">Just see the my new admin!</span>
                                                 <span class="font-12 text-nowrap d-block text-muted">9:30 AM</span>
                                             </div>
                                         </a>
@@ -179,14 +178,14 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                            <img src="assets/images/users/profile-pic.jpg" alt="user" class="rounded-circle"
-                                width="40">
+                            <i class="fas fa-user"></i>
+                            <!-- <img src="assets/images/users/profile-pic.jpg" alt="user" class="rounded-circle" width="40"> -->
                             <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
-                                    class="text-dark">Jason Doe</span> <i data-feather="chevron-down"
+                                    class="text-dark"><%= connectUser.getLastname() %></span> <i data-feather="chevron-down"
                                     class="svg-icon"></i></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                            <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
+                            <a class="dropdown-item" href="users?list=profil"><i data-feather="user"
                                     class="svg-icon mr-2 ml-1"></i>
                                 My Profile</a>
                             <a class="dropdown-item" href="javascript:void(0)"><i data-feather="credit-card"
@@ -204,8 +203,7 @@
                                     class="svg-icon mr-2 ml-1"></i>
                                 Logout</a>
                             <div class="dropdown-divider"></div>
-                            <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
-                                    Profile</a></div>
+                            
                         </div>
                     </li>
                     <!-- ============================================================== -->

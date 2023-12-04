@@ -2,6 +2,12 @@
 <%@page import="java.util.List"%>
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+	if((Users)session.getAttribute("user") == null || session.getId().isEmpty()){
+		response.sendRedirect("login.jsp");
+	}else{
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -134,3 +140,4 @@
     <script src="dist/js/pages/datatable/datatable-basic.init.js"></script>
 </body>
 </html>
+<%}%>

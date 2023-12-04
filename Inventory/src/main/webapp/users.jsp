@@ -3,6 +3,12 @@
 <%@page import="java.util.List"%>
 <%@page import="ci.inventory.entity.Userstatus"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+	if((Users)session.getAttribute("user") == null || session.getId().isEmpty()){
+		response.sendRedirect("login.jsp");
+	}else{
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -106,8 +112,8 @@
 		                                        </select>
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-12 col-lg-12">
-		                                    	<button type="button" class="btn btn-light">Reset</button>
-		                                    	<input type="submit" value="Save" class="btn btn-primary"/>
+		                                    	<button type="button" class="btn btn-light form-control">Reset</button>
+		                                    	<input type="submit" value="Save" class="btn btn-primary form-control"/>
 		                                    </div>
 		                                </form>
 		                            </div>
@@ -149,3 +155,4 @@
     <script src="dist/js/pages/dashboards/dashboard1.min.js"></script>
 </body>
 </html>
+<%}%>

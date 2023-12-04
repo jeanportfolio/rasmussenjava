@@ -1,5 +1,11 @@
-<%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
+<%@page import="ci.inventory.entity.Users"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+	if((Users)session.getAttribute("user") == null || session.getId().isEmpty()){
+		response.sendRedirect("login.jsp");
+	}else{
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,7 +78,7 @@
                                         <span
                                             class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">+18.33%</span>
                                     </div>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients</h6>
+                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients <%= session.getAttribute("user") %></h6>
                                 </div>
                                 <div class="ml-auto mt-md-3 mt-lg-0">
                                     <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
@@ -551,3 +557,4 @@
     <script src="dist/js/pages/dashboards/dashboard1.min.js"></script>
 </body>
 </html>
+<%}%>

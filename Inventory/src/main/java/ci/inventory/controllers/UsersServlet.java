@@ -65,11 +65,12 @@ public class UsersServlet extends HttpServlet {
 				request.setAttribute("userStatus", userStatus);
 				request.setAttribute("users", new Users());
 				request.setAttribute("userRoles", userRoles);
-				request.setAttribute("action", "");
-				/*
-				 * else request.setAttribute("accounts", new ArrayList<Account>());
-				 */
+				
 				request.getRequestDispatcher("users.jsp").forward(request, response);
+			}else if(list.equals("profil")){
+				
+				//request.setAttribute("connectUser", (Users)session.getAttribute("user"));
+				request.getRequestDispatcher("userprofil.jsp").forward(request, response);
 			}else {
 				List<Users> listusers = serviveUsers.getAll();
 				request.setAttribute("listusers", listusers);
