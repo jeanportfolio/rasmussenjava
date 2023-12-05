@@ -23,7 +23,7 @@
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
-                        <span class="logo-text">Heavenly Kreation
+                        <span class="logo-text">Kreation Inventory
                             <!-- dark Logo text 
                             <img src="assets/images/logo-text.png" alt="homepage" class="dark-logo" />
                             <!-- Light Logo text 

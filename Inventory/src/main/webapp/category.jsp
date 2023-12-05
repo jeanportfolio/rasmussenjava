@@ -69,9 +69,7 @@
                 <div class="row">
                     <div class="col-12">
                     	<div class="row">
-                    		<div class="col-md-3 col-lg-3">
-                    		</div>
-		                    <div class="col-sm-12 col-md-6 col-lg-6">
+		                    <div class="col-sm-12 offset-md-1 offset-lg-2 col-md-10 col-lg-8">
 		                        <div class="card">
 		                            <div class="card-body">
 		                                <h4 class="card-title">Category Form</h4>
@@ -89,8 +87,10 @@
 		                                        <textarea rows="5" class="form-control" name="description"></textarea>
 		                                        
 		                                    </div>
-		                                    <div class="form-group col-sm-12 col-md-12 col-lg-12">
-		                                    	<button type="button" class="btn btn-light form-control">Reset</button>
+		                                    <div class="form-group col-sm-12 offset-lg-2 col-md-6 col-lg-4">
+		                                    	<button type="reset" class="btn btn-light form-control">Reset</button>
+		                                    </div>
+		                                    <div class="form-group col-sm-12 col-md-6 col-lg-4">
 		                                    	<input type="submit" value="Save" class="btn btn-primary form-control"/>
 		                                    </div>
 		                                </form>
