@@ -26,7 +26,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 	 */
 	@Override
 	public Categoryproduct create(Categoryproduct category) {
-		String req = "INSERT INTO category (title, description, idusers) VALUES (?,?,?)";
+		String req = "INSERT INTO categoryproduct (title, description, idusers) VALUES (?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
@@ -68,7 +68,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 	@Override
 	public Categoryproduct getById(int id) {
 		Categoryproduct category = null;
-		String req = "SELECT * FROM category WHERE id = ?";
+		String req = "SELECT * FROM categoryproduct WHERE id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; 
 		try {
@@ -110,7 +110,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 
 	@Override
 	public Categoryproduct update(Categoryproduct category) {
-		String req = "UPDATE category SET title = ?, description = ?, iduser = ? WHERE id = ?";
+		String req = "UPDATE categoryproduct SET title = ?, description = ?, iduser = ? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		
 		try {
@@ -144,7 +144,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 
 	@Override
 	public int delete(int id) {
-		String req = "DELETE FROM category WHERE id = ?";
+		String req = "DELETE FROM categoryproduct WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result;
 		
@@ -177,7 +177,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 	public List<Categoryproduct> getAll() {
 		Categoryproduct category = null;
 		List<Categoryproduct> listRole = new ArrayList<>();
-		String req = "SELECT * FROM category";
+		String req = "SELECT * FROM categoryproduct";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {

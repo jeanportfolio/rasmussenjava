@@ -5,12 +5,13 @@ import java.util.List;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
-
+import ci.inventory.entity.Categoryproduct;
 import ci.inventory.entity.Message;
 import ci.inventory.entity.TypeMessage;
 import ci.inventory.entity.Users;
 import ci.inventory.entity.Usersrole;
 import ci.inventory.entity.Userstatus;
+import ci.inventory.services.CategoryproductService;
 import ci.inventory.services.UsersService;
 import ci.inventory.services.UsersroleService;
 import ci.inventory.services.UserstatusService;
@@ -23,13 +24,12 @@ import jakarta.servlet.http.HttpSession;
 
 
 
-@WebServlet("/users")
+@WebServlet("/category")
 public class CategoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
 	private UsersService serviveUsers;
-	private UserstatusService serviceUserStatus;
-	private UsersroleService serviceUsersRole;
+	private CategoryproductService serviceCategory;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -37,8 +37,7 @@ public class CategoryServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		System.out.println("init du LoginServlet");
 		serviveUsers = new UsersService();
-		serviceUsersRole = new UsersroleService();
-		serviceUserStatus = new UserstatusService();
+		serviceCategory = new CategoryproductService();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,22 +58,16 @@ public class CategoryServlet extends HttpServlet {
 		}else {
 			//Check if the request concern a list or an add
 			if(list == null) {
-				List<Userstatus> userStatus = serviceUserStatus.getAll();
-				List<Usersrole> userRoles = serviceUsersRole.getAll();
-
-				request.setAttribute("userStatus", userStatus);
-				request.setAttribute("users", new Users());
-				request.setAttribute("userRoles", userRoles);
 				
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("category.jsp").forward(request, response);
 			}else if(list.equals("profil")){
 				
 				//request.setAttribute("connectUser", (Users)session.getAttribute("user"));
-				request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+				request.getRequestDispatcher("category.jsp").forward(request, response);
 			}else {
-				List<Users> listusers = serviveUsers.getAll();
-				request.setAttribute("listusers", listusers);
-				request.getRequestDispatcher("userslist.jsp").forward(request, response);
+				List<Categoryproduct> listcategory = serviceCategory.getAll();
+				request.setAttribute("listusers", listcategory);
+				request.getRequestDispatcher("categorylist.jsp").forward(request, response);
 			}
 		}
 
@@ -99,8 +92,6 @@ public class CategoryServlet extends HttpServlet {
 
 
 			Users createUser = new Users();
-			List<Userstatus> userStatus = serviceUserStatus.getAll();
-			List<Usersrole> userRoles = serviceUsersRole.getAll();
 			Message message;
 			Boolean errorfield = false;
 			StringBuffer errormessage = new StringBuffer();
@@ -153,8 +144,6 @@ public class CategoryServlet extends HttpServlet {
 
 				request.setAttribute("users", new Users());
 				request.setAttribute("message", message);
-				request.setAttribute("userStatus", userStatus);
-				request.setAttribute("userRoles", userRoles);
 				request.getRequestDispatcher("users.jsp").forward(request, response);
 			}else {
 				createUser.setFisrtname(firstname);
@@ -176,9 +165,7 @@ public class CategoryServlet extends HttpServlet {
 
 				request.setAttribute("users", new Users());		
 				request.setAttribute("message", message);
-				request.setAttribute("userStatus", userStatus);
-				request.setAttribute("userRoles", userRoles);
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("category.jsp").forward(request, response);
 			}
 		}
 
@@ -200,8 +187,7 @@ public class CategoryServlet extends HttpServlet {
 
 			Users user = (Users)session.getAttribute("user");
 			Users updateUser = new Users();
-			List<Userstatus> userStatus = serviceUserStatus.getAll();
-			List<Usersrole> userRoles = serviceUsersRole.getAll();
+			List<Categoryproduct> userRoles = serviceCategory.getAll();
 			Message message;
 
 			String firstname = request.getParameter("firstname");
@@ -258,9 +244,8 @@ public class CategoryServlet extends HttpServlet {
 
 					}
 					request.setAttribute("message", message);
-					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);
-					request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+					request.getRequestDispatcher("category.jsp").forward(request, response);
 
 				}else {
 					message = new Message(TypeMessage.warning, "Check, The new password is different to the repeat password !");
@@ -270,7 +255,6 @@ public class CategoryServlet extends HttpServlet {
 				message = new Message(TypeMessage.error, "Password incorrect, please try again !");
 			}
 			request.setAttribute("message", message);
-			request.setAttribute("userStatus", userStatus);
 			request.setAttribute("userRoles", userRoles);
 			request.getRequestDispatcher("userprofil.jsp").forward(request, response);
 		}

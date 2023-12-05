@@ -9,29 +9,37 @@
 				<li class="sidebar-item"><a class="sidebar-link sidebar-link"
 					href="index.jsp" aria-expanded="false"><i data-feather="home"
 						class="feather-icon"></i><span class="hide-menu">Dashboard</span></a></li>
+				
 				<li class="list-divider"></li>
 				<li class="nav-small-cap"><span class="hide-menu">Product Area</span></li>
-
-				<li class="sidebar-item"><a class="sidebar-link"
-					href="ticket-list.html" aria-expanded="false"><i
-						data-feather="tag" class="feather-icon"></i><span
-						class="hide-menu">Categories </span></a></li>
-				<li class="sidebar-item"><a class="sidebar-link sidebar-link"
-					href="app-chat.html" aria-expanded="false"><i
-						data-feather="message-square" class="feather-icon"></i><span
-						class="hide-menu">Products</span></a></li>
+				<li class="sidebar-item"><a class="sidebar-link has-arrow" href="ticket-list.html" aria-expanded="false">
+					<i data-feather="tag" class="feather-icon"></i>
+					<span class="hide-menu">Categories </span></a>
+					<ul aria-expanded="false" class="collapse  first-level base-level-line">
+						<li class="sidebar-item"><a href="category"
+							class="sidebar-link"><span class="hide-menu">New Category </span></a></li>
+						<li class="sidebar-item"><a href="category?list"
+							class="sidebar-link"><span class="hide-menu">Categories List </span></a></li>
+					</ul></li>
+				<li class="sidebar-item"><a class="sidebar-link has-arrow" href="app-chat.html" aria-expanded="false">
+					<i data-feather="message-square" class="feather-icon"></i>
+					<span class="hide-menu">Products</span></a>
+					<ul aria-expanded="false" class="collapse  first-level base-level-line">
+						<li class="sidebar-item"><a href="product"	class="sidebar-link">
+							<span class="hide-menu">New Product </span></a></li>
+						<li class="sidebar-item"><a href="product?"
+							class="sidebar-link"><span class="hide-menu">Products List </span></a></li>
+					</ul></li>
 
 				<li class="list-divider"></li>
 				<li class="nav-small-cap"><span class="hide-menu">Stock Area</span></li>
-				<li class="sidebar-item"><a class="sidebar-link has-arrow"
-					href="javascript:void(0)" aria-expanded="false"><i
-						data-feather="file-text" class="feather-icon"></i><span
-						class="hide-menu">Inventories </span></a>
+				<li class="sidebar-item"><a class="sidebar-link has-arrow"	href="javascript:void(0)" aria-expanded="false">
+					<i data-feather="file-text" class="feather-icon"></i>
+					<span class="hide-menu">Inventories </span></a>
 					<ul aria-expanded="false"
 						class="collapse  first-level base-level-line">
-						<li class="sidebar-item"><a href="form-inputs.html"
-							class="sidebar-link"><span class="hide-menu"> Form
-									Inputs </span></a></li>
+						<li class="sidebar-item"><a href="form-inputs.html" class="sidebar-link">
+							<span class="hide-menu"> Form Inputs </span></a></li>
 						<li class="sidebar-item"><a href="form-input-grid.html"
 							class="sidebar-link"><span class="hide-menu"> Form
 									Grids </span></a></li>
@@ -46,20 +54,10 @@
 					<ul aria-expanded="false"
 						class="collapse  first-level base-level-line">
 						<li class="sidebar-item"><a href="table-basic.html"
-							class="sidebar-link"><span class="hide-menu"> Basic
-									Table </span></a></li>
+							class="sidebar-link"><span class="hide-menu">Order Product </span></a></li>
 						<li class="sidebar-item"><a href="table-dark-basic.html"
-							class="sidebar-link"><span class="hide-menu"> Dark
-									Basic Table </span></a></li>
-						<li class="sidebar-item"><a href="table-sizing.html"
-							class="sidebar-link"><span class="hide-menu"> Sizing
-									Table </span></a></li>
-						<li class="sidebar-item"><a href="table-layout-coloured.html"
-							class="sidebar-link"><span class="hide-menu"> Coloured
-									Table Layout </span></a></li>
-						<li class="sidebar-item"><a href="table-datatable-basic.html"
-							class="sidebar-link"><span class="hide-menu"> Basic
-									Datatables Layout </span></a></li>
+							class="sidebar-link"><span class="hide-menu">Orders List </span></a></li>
+						
 					</ul></li>
 				
 				<li class="sidebar-item"><a class="sidebar-link has-arrow"

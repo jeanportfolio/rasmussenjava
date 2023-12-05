@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 
-@WebServlet("/users")
+@WebServlet("/customer")
 public class CustomerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
@@ -66,15 +66,15 @@ public class CustomerServlet extends HttpServlet {
 				request.setAttribute("users", new Users());
 				request.setAttribute("userRoles", userRoles);
 				
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("customer.jsp").forward(request, response);
 			}else if(list.equals("profil")){
 				
 				//request.setAttribute("connectUser", (Users)session.getAttribute("user"));
-				request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+				request.getRequestDispatcher("customer.jsp").forward(request, response);
 			}else {
 				List<Users> listusers = serviveUsers.getAll();
 				request.setAttribute("listusers", listusers);
-				request.getRequestDispatcher("userslist.jsp").forward(request, response);
+				request.getRequestDispatcher("customerlist.jsp").forward(request, response);
 			}
 		}
 
@@ -155,7 +155,7 @@ public class CustomerServlet extends HttpServlet {
 				request.setAttribute("message", message);
 				request.setAttribute("userStatus", userStatus);
 				request.setAttribute("userRoles", userRoles);
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("customer.jsp").forward(request, response);
 			}else {
 				createUser.setFisrtname(firstname);
 				createUser.setLastname(lastname);
@@ -178,7 +178,7 @@ public class CustomerServlet extends HttpServlet {
 				request.setAttribute("message", message);
 				request.setAttribute("userStatus", userStatus);
 				request.setAttribute("userRoles", userRoles);
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("customer.jsp").forward(request, response);
 			}
 		}
 
@@ -260,7 +260,7 @@ public class CustomerServlet extends HttpServlet {
 					request.setAttribute("message", message);
 					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);
-					request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+					request.getRequestDispatcher("customer.jsp").forward(request, response);
 
 				}else {
 					message = new Message(TypeMessage.warning, "Check, The new password is different to the repeat password !");
@@ -272,7 +272,7 @@ public class CustomerServlet extends HttpServlet {
 			request.setAttribute("message", message);
 			request.setAttribute("userStatus", userStatus);
 			request.setAttribute("userRoles", userRoles);
-			request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+			request.getRequestDispatcher("customer.jsp").forward(request, response);
 		}
 	}
 

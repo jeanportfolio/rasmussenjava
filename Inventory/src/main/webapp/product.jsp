@@ -1,3 +1,5 @@
+<%@page import="ci.inventory.entity.Categoryproduct"%>
+<%@page import="ci.inventory.entity.Products"%>
 <%@page import="ci.inventory.entity.Users"%>
 <%@page import="ci.inventory.entity.Usersrole"%>
 <%@page import="java.util.List"%>
@@ -74,42 +76,35 @@
 		                    <div class="col-sm-12 col-md-6 col-lg-6">
 		                        <div class="card">
 		                            <div class="card-body">
-		                                <h4 class="card-title">Users Form</h4>
-		                                <% Users users = (Users)request.getAttribute("users"); %>
+		                                <h4 class="card-title">Product Form</h4>
+		                                <% Products product = (Products)request.getAttribute("product"); %>
 		                                <form class="row" action="users" method="post">
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
-		                                    	<label class="">First Name </label>
-		                                        <input type="text" class="form-control" name="firstname" value="" placeholder="First Name">
-		                                        <label class="">Last Name </label>
-		                                        <input type="text" class="form-control" name="lastname" value="" placeholder="Last Name">
-		                                        <label class="">Birthday</label>
-		                                        <input type="date" class="form-control" name="birthday" placeholder = "mm/dd/yyyy">
-		                                        <label class="">Status </label>
-		                                        <% List<Userstatus> userStatus = (List<Userstatus>)request.getAttribute("userStatus");%>
+		                                    	<label class="">Category </label>
+		                                        <% List<Categoryproduct> categories = (List<Categoryproduct>)request.getAttribute("categories");%>
 		                                        <select class="form-control" name="idstatus">
 		                                        	
 													<option value="0" >Select a status</option>
-													<% for(Userstatus status : userStatus){ %>
-          											<option <%if(status.getId() == users.getIduserstatus()){ %>selected = "selected" <%} 
-          											%> value="<%= status.getId() %>"><%= status.getTitle()%></option>
+													<% for(Categoryproduct category : categories){ %>
+          											<option <%if(product.getIdcategory() == category.getId()){ %>selected = "selected" <%} 
+          											%> value="<%= category.getId() %>"><%= category.getTitle()%></option>
 									          		<% } %>
 		                                        </select>
+		                                    	<label class="">Designation </label>
+		                                        <input type="text" class="form-control" name="designation" value="" placeholder="Designation">
+		                                        
+		                                        <label class="">Price</label>
+		                                        <input type="number" class="form-control" name="birthday" placeholder = "Price">
+		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
-		                                        <label class="">Login </label>
-		                                        <input type="text" class="form-control" name="login" value="">
-		                                        <label class="">Password </label>
-		                                        <input type="password" class="form-control" name="password" value="" placeholder="Password">
-		                                        <label class="">Role </label>
-		                                        <% List<Usersrole> userRoles = (List<Usersrole>)request.getAttribute("userRoles");%>
-		                                        <select class="form-control" name="idrole">
-													<option value="0">Select a role</option>
-													<% for(Usersrole role : userRoles){ %>
-          											<option <%if(role.getId() == users.getIdusersrole()){ %>selected = "selected" <%} 
-          											%> value="<%= role.getId() %>"><%= role.getTitle()%></option>
-									          		<% } %>
-		                                        </select>
+		                                    	<label class="">Description </label>
+		                                        <textarea rows="5" class="form-control" name="description" placeholder="Description"></textarea>
+		                                        <label class="">Sale price </label>
+		                                        <input type="text" class="form-control" name="saleprice" value="">
+		                                        
+		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-12 col-lg-12">
 		                                    	<button type="button" class="btn btn-light form-control">Reset</button>

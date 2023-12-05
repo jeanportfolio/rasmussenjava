@@ -77,6 +77,7 @@
 		                                <h4 class="card-title">Users Form</h4>
 		                                <% Users users = (Users)request.getAttribute("users"); %>
 		                                <form class="row" action="users" method="post">
+		                                	<input type="hidden" name = "id" value = "" >
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	<label class="">First Name </label>
 		                                        <input type="text" class="form-control" name="firstname" value="" placeholder="First Name">
