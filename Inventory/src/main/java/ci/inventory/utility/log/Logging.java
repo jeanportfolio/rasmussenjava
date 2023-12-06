@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -14,20 +13,24 @@ public class Logging{
 
 	private	static Logger logger;
 	private static LogManager loggermanager;
+	private static MyHandler fileHandler;
+
 	
 	static {
 		try {
-			/*
-			 * Path path = Paths.get("src/main/resources/mylogging.properties");
-			 * System.out.println(path.getFileName());
-			 */
-			// Initialize a default logger
+			
+			Path basepath = Path.of("src/main/resources/").toAbsolutePath();
+			
+
+			System.out.println(basepath);
+			 
+			// Initialize a default logger C:/Users/Jeanvy/git/repository/Inventory/
 			logger = Logger.getLogger("");
 			loggermanager = LogManager.getLogManager();
-			loggermanager.getLogManager().readConfiguration(new FileInputStream("src/main/resources/mylogging.properties"));
+			loggermanager.getLogManager().readConfiguration(new FileInputStream(basepath+"/mylogging.properties"));
 			
 			//Initialize my customize handler
-			MyHandler fileHandler = new MyHandler(new FileOutputStream("src/main/resources/logger.log", true), new MyLogFormatter());
+			fileHandler = new MyHandler(new FileOutputStream(basepath.toString()+"/logger.log", true), new MyLogFormatter());
 			logger.addHandler(fileHandler);
 		} catch (SecurityException | IOException e1) {
 			logger.log(Level.SEVERE, e1.getMessage(), e1);

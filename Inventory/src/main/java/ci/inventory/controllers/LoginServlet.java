@@ -27,12 +27,13 @@ public class LoginServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		System.out.println("init du LoginServlet");
+		
 		serviveUsers = new UsersService();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		if (request.getParameter("logout") != null && session != null) {
 			// Disconnection
 
@@ -54,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
-
+		
 		if (request.getParameter("logout") != null && session != null) {
 			// Disconnect user
 			System.out.println("Disconnection");
@@ -87,7 +88,7 @@ public class LoginServlet extends HttpServlet {
 					
 					request.setAttribute("message", message);
 					session.setAttribute("user", user);
-
+					
 					request.getRequestDispatcher("index.jsp").forward(request, response);
 				}
 
