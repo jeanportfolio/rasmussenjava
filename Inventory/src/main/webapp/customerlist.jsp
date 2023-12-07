@@ -1,3 +1,4 @@
+<%@page import="ci.inventory.entity.Customers"%>
 <%@page import="ci.inventory.entity.Users"%>
 <%@page import="java.util.List"%>
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
@@ -71,29 +72,21 @@
                 <table id="myTable" class="table table-striped table-bordered display no-wrap" style="width:100%">
 			    <thead>
 			        <tr>
-			            <th>Login</th>
-			            <th>First name</th>
-			            <th>Last name</th>
-			            <th>Birthday</th>
-			            <th>Role</th>
-			            <th>Status</th>
-
-			            <th>Action</th>
+			            <th>Name</th>
+			            <th>Address</th>
+			            <th>Phone</th>
 			        </tr>
 			    </thead>
 			    <tbody>
 			    
-			    <% List<Users> listusers = (List<Users>)request.getAttribute("listusers");%>
-			  		<% for(Users user : listusers){ %>
+			    <% List<Customers> listcustomer = (List<Customers>)request.getAttribute("listcustomer");%>
+			  		<% for(Customers customer : listcustomer){ %>
 			        <tr>
-			            <td><%= user.getLogin() %></td>
-			            <td><%= user.getFisrtname()%></td>
-			            <td><%= user.getLastname() %></td>
-			            <td><%= user.getBirthday()%></td>
-			            <td><%= user.getRole().getTitle()%></td>
-			            <td><%= user.getStatus().getTitle()%></td>
+			            <td><%= customer.getCustomername() %></td>
+			            <td><%= customer.getAddress()%></td>
+			            <td><%= customer.getPhone() %></td>
 			            <td>
-			            	<a class="btn" href="/users?id=<%= user.getId()%>">Edit</a>
+			            	<a class="btn" href="customer?action=update&id=<%= customer.getId()%>">Edit</a>
 			            </td>
 			        </tr>
 			    <% } %>

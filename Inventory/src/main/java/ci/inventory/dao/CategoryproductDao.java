@@ -7,17 +7,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.ICategoryproductDao;
 import ci.inventory.entity.Categoryproduct;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 public class CategoryproductDao implements ICategoryproductDao{
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(CategoryproductDao.class.getName());
+	//private Logger logManager = Logging.setLoggerName(CategoryproductDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(UsersDao.class.getName());
 
 	/**
 	 * Create CategoryProduct
@@ -45,7 +47,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 			logManager.log(Level.INFO, "Category product created");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -53,7 +55,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -93,7 +95,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 			logManager.log(Level.INFO, "Category product with id "+ id + " retrieved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -101,7 +103,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -110,7 +112,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 
 	@Override
 	public Categoryproduct update(Categoryproduct category) {
-		String req = "UPDATE categoryproduct SET title = ?, description = ?, iduser = ? WHERE id = ?";
+		String req = "UPDATE categoryproduct SET title = ?, description = ?, idusers = ? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		
 		try {
@@ -128,14 +130,14 @@ public class CategoryproductDao implements ICategoryproductDao{
 			logManager.log(Level.INFO, "Category product saved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -159,14 +161,14 @@ public class CategoryproductDao implements ICategoryproductDao{
 			logManager.log(Level.INFO, "Category product with id "+ id + " deleted");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return -1;
 		}finally {
 			try {
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -202,7 +204,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 			logManager.log(Level.INFO, "Category product list retrieved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -210,7 +212,7 @@ public class CategoryproductDao implements ICategoryproductDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

@@ -3,6 +3,9 @@ package ci.inventory.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ci.inventory.services.CategoryproductService;
+import ci.inventory.services.UsersService;
+
 /**
  * {@summary This class is for managing the products data} 
  *
@@ -17,6 +20,8 @@ public class Products {
 	private BigDecimal saleprice;
 	private int idcategory;
 	private int idusers;
+	private Categoryproduct category;
+	private Users user;
 	private LocalDateTime createdate;
 	private LocalDateTime modifydate;
 	
@@ -43,6 +48,14 @@ public class Products {
 	}
 	
 	//Getters and Setters
+	public Categoryproduct getCategory() {
+		return new CategoryproductService().get(idcategory);
+	}
+	
+	public Users getUser() {
+		return new UsersService().get(idusers);
+	}
+	
 	public int getId() {
 		return id;
 	}

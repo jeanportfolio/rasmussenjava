@@ -79,7 +79,8 @@
 									<div class="card-body">
 										<h4 class="card-title">User Profile</h4>
 										<% Users users = (Users)session.getAttribute("user"); %>
-										<form class="row" action="users" method="put">
+										<form class="row" action="" >
+										
 											<div class="form-group col-sm-12 col-md-6 col-lg-6">
 												<label class="">First Name </label> 
 												<div class="alert alert-primary bg-white text-primary"><%= users.getFisrtname()%></div>
@@ -95,15 +96,13 @@
 
 												<label class="">Login </label>
 												<div class="alert alert-primary bg-white text-primary"><%= users.getLogin()%></div>
-												<label class="">Password </label> 
-												<div class="alert alert-primary bg-white text-primary"><%= users.getPassword()%></div> 
 												<label class="">Role </label>
 												<div class="alert alert-primary bg-white text-primary"><%= users.getRole().getTitle()%></div>
 												<label class="">Role detail</label>
 												<div class="alert alert-primary bg-white text-primary"><%= users.getRole().getDescription()%></div>
 											</div>
 											<div class="form-group col-sm-12 offset-md-3 offset-lg-4 col-md-6 col-lg-4">
-												<input type="submit" value="Edit" class="form-control btn btn-primary " />
+												<a href="users?action=update&id=<%= users.getId()%>" class="form-control btn btn-primary " >Edit</a>
 											</div>
 										</form>
 									</div>

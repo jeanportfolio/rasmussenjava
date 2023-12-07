@@ -54,21 +54,15 @@ public class Users {
 	public Users getUsers() {
 		return new UsersService().get(idusers);
 	}
-	public void setUsers(Users users) {
-		this.users = users;
-	}
+	
 	public Usersrole getRole() {
 		return new UsersroleService().get(idusersrole);
 	}
-	public void setRole(Usersrole role) {
-		this.role = role;
-	}
+	
 	public Userstatus getStatus() {
 		return new UserstatusService().get(iduserstatus);
 	}
-	public void setStatus(Userstatus status) {
-		this.status = status;
-	}
+	
 	public int getId() {
 		return id;
 	}

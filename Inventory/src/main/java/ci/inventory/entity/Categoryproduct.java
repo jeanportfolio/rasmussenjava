@@ -2,6 +2,8 @@ package ci.inventory.entity;
 
 import java.time.LocalDateTime;
 
+import ci.inventory.services.UsersService;
+
 public class Categoryproduct {
 	//Properties
 	private int id;
@@ -31,6 +33,10 @@ public class Categoryproduct {
 	}
 
 	//Getters and Setters
+	public Users getUser() {
+		return  new UsersService().get(idusers);
+	}
+	
 	public int getId() {
 		return id;
 	}

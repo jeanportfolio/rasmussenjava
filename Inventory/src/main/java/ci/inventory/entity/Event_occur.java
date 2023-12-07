@@ -2,6 +2,8 @@ package ci.inventory.entity;
 
 import java.time.LocalDateTime;
 
+import ci.inventory.services.UsersService;
+
 public class Event_occur {
 	
 	//Properties
@@ -30,6 +32,9 @@ public class Event_occur {
 	}
 	
 	//Getters and Setters
+	public Users getUser() {
+		return  new UsersService().get(idusers);
+	}
 	public int getId() {
 		return id;
 	}

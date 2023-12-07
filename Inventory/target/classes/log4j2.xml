@@ -6,12 +6,12 @@
   </properties>
   <Appenders>
     <Console name="Console">
-      <PatternLayout pattern="${basepath} [%t] %d{HH:mm:ss.SSS} %-5level %logger{56} - %msg%n"/>
+      <PatternLayout pattern="${basepath} [%t] %d{HH:mm:ss.SSS} %-5level %c %logger{56} - %msg%n"/>
     </Console>
 	<RollingFile name="RollingFile" fileName="${basepath}/inventory/app.log" 
 				filePattern="${basepath}/inventory/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
 		<PatternLayout>
-			<pattern>%d{HH:mm:ss.SSS} :: %-5level :: [%t] :: %logger{56} :: %msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} :: %-5level :: [%t]:: %c :: %logger{56} :: %msg%n</pattern>
 		</PatternLayout>
 		<Policies>
 			<TimeBasedTriggeringPolicy/>

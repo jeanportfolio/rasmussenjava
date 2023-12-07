@@ -1,7 +1,7 @@
+<%@page import="ci.inventory.entity.Customers"%>
+<%@page import="ci.inventory.entity.Customers"%>
 <%@page import="ci.inventory.entity.Users"%>
-<%@page import="ci.inventory.entity.Usersrole"%>
 <%@page import="java.util.List"%>
-<%@page import="ci.inventory.entity.Userstatus"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
@@ -72,43 +72,28 @@
 		                    <div class="col-sm-12 offset-md-1 offset-lg-2 col-md-10 col-lg-8">
 		                        <div class="card">
 		                            <div class="card-body">
-		                                <h4 class="card-title">Customers Form</h4>
-		                                <% Users users = (Users)request.getAttribute("users"); %>
-		                                <form class="row" action="users" method="post">
-		                                	<input type="hidden" name = "id" value = "" >
+		                                <h4 class="card-title">Customer Form</h4>
+		                                <% Customers customer = (Customers)request.getAttribute("customer"); %>
+		                                <form class="row" action="customer" method="post">
+		                                	<input type="hidden" name = "id" value = "<%= customer.getId() > 0 ? customer.getId():""%>" >
+		                                	<input type="hidden" name="action" value="<%= customer.getId() > 0 ? "update" : "create"%>">
+		                                    
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
-		                                    	<label class="">First Name </label>
-		                                        <input type="text" class="form-control" name="firstname" value="" placeholder="First Name">
-		                                        <label class="">Last Name </label>
-		                                        <input type="text" class="form-control" name="lastname" value="" placeholder="Last Name">
-		                                        <label class="">Birthday</label>
-		                                        <input type="date" class="form-control" name="birthday" placeholder = "mm/dd/yyyy">
-		                                        <label class="">Status </label>
-		                                        <% List<Userstatus> userStatus = (List<Userstatus>)request.getAttribute("userStatus");%>
-		                                        <select class="form-control" name="idstatus">
-		                                        	
-													<option value="0" >Select a status</option>
-													<% for(Userstatus status : userStatus){ %>
-          											<option <%if(status.getId() == users.getIduserstatus()){ %>selected = "selected" <%} 
-          											%> value="<%= status.getId() %>"><%= status.getTitle()%></option>
-									          		<% } %>
-		                                        </select>
+		                                    	<label class="">Name </label>
+		                                        <input required type="text" class="form-control" name="customername" 
+		                                        value="<%= customer.getCustomername() == null ? "": customer.getCustomername() %>" 
+		                                        placeholder="Customer Name">
+		                                        
+		                                        <label class="">Phone</label>
+		                                        <input required type="tel" class="form-control" name="phone" 
+		                                        value="<%= customer.getPhone() == null ? "": customer.getPhone() %>" placeholder = "Phone">
+		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
-		                                        <label class="">Login </label>
-		                                        <input type="text" class="form-control" name="login" value="">
-		                                        <label class="">Password </label>
-		                                        <input type="password" class="form-control" name="password" value="" placeholder="Password">
-		                                        <label class="">Role </label>
-		                                        <% List<Usersrole> userRoles = (List<Usersrole>)request.getAttribute("userRoles");%>
-		                                        <select class="form-control" name="idrole">
-													<option value="0">Select a role</option>
-													<% for(Usersrole role : userRoles){ %>
-          											<option <%if(role.getId() == users.getIdusersrole()){ %>selected = "selected" <%} 
-          											%> value="<%= role.getId() %>"><%= role.getTitle()%></option>
-									          		<% } %>
-		                                        </select>
+		                                    	<label class="">Address </label>
+		                                        <input required type="text" class="form-control" name="address" placeholder="Address"
+		                                        value="<%= customer.getAddress() == null ? "":customer.getAddress() %>">
 		                                    </div>
 		                                    <div class="form-group col-sm-12 offset-lg-2 col-md-6 col-lg-4">
 		                                    	<button type="reset" class="btn btn-light form-control">Reset</button>

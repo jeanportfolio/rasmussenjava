@@ -2,6 +2,8 @@ package ci.inventory.entity;
 
 import java.time.LocalDateTime;
 
+import ci.inventory.services.UsersService;
+
 public class Inventorylogsdetail {
 	
 	//Properties
@@ -43,6 +45,9 @@ public class Inventorylogsdetail {
 	}
 	
 	//Getters and Setters
+	public Users getUser() {
+		return  new UsersService().get(idusers);
+	}
 	public int getId() {
 		return id;
 	}

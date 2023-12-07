@@ -7,21 +7,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import ci.inventory.dao.interfaces.IStoct_movementDao;
-import ci.inventory.entity.Stoct_movement;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
+import ci.inventory.dao.interfaces.IStock_movementDao;
+import ci.inventory.entity.Stock_movement;
 import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
-public class Stoct_movementDao implements IStoct_movementDao{
+public class Stock_movementDao implements IStock_movementDao{
 
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(StockorderitemsDao.class.getName());
+	//private Logger logManager = Logging.setLoggerName(Stock_movementDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(Stock_movementDao.class.getName());
 	
 	@Override
-	public Stoct_movement create(Stoct_movement stoct_movement) {
+	public Stock_movement create(Stock_movement stoct_movement) {
 		String req = "INSERT INTO stoct_movement (title, idusers) VALUES (?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -41,19 +44,19 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
 			try {
 				rs.close();
 				pstmt.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -61,8 +64,8 @@ public class Stoct_movementDao implements IStoct_movementDao{
 	}
 
 	@Override
-	public Stoct_movement getById(int id) {
-		Stoct_movement stoct_movement = null;
+	public Stock_movement getById(int id) {
+		Stock_movement stoct_movement = null;
 		String req = "SELECT * FROM stoct_movement WHERE id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -74,7 +77,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				stoct_movement = new Stoct_movement();
+				stoct_movement = new Stock_movement();
 				
 				stoct_movement.setId(rs.getInt("id"));
 				stoct_movement.setTitle(rs.getString("title"));
@@ -88,10 +91,10 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -100,7 +103,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -108,7 +111,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 	}
 
 	@Override
-	public Stoct_movement update(Stoct_movement stoct_movement) {
+	public Stock_movement update(Stock_movement stoct_movement) {
 		String req = "UPDATE stoct_movement SET title = ?, idusers = ? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -127,10 +130,10 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -138,7 +141,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -163,10 +166,10 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return -1;
 		}finally {
@@ -174,7 +177,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -182,10 +185,10 @@ public class Stoct_movementDao implements IStoct_movementDao{
 	}
 
 	@Override
-	public List<Stoct_movement> getAll() {
+	public List<Stock_movement> getAll() {
 		
-		Stoct_movement stoct_movement = null;
-		List<Stoct_movement> listStoct_movement = new ArrayList<>();
+		Stock_movement stoct_movement = null;
+		List<Stock_movement> listStoct_movement = new ArrayList<>();
 		String req = "SELECT * FROM stoct_movement";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -197,7 +200,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				stoct_movement = new Stoct_movement();
+				stoct_movement = new Stock_movement();
 				
 				stoct_movement.setId(rs.getInt("id"));
 				stoct_movement.setTitle(rs.getString("title"));
@@ -212,10 +215,10 @@ public class Stoct_movementDao implements IStoct_movementDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -224,7 +227,7 @@ public class Stoct_movementDao implements IStoct_movementDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

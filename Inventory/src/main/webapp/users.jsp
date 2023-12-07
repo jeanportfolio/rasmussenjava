@@ -73,21 +73,25 @@
 		                        <div class="card">
 		                            <div class="card-body">
 		                                <h4 class="card-title">Users Form</h4>
-		                                <% Users users = (Users)request.getAttribute("users"); %>
-		                                <form class="row" action="users" method="post">
-		                                	<input type="hidden" name = "id" value = "" >
+		                                <% Users users = (Users)request.getAttribute("updateUser"); %>
+		                                <form class="row" action="users" method="POST">
+		                                	<input type="hidden" name ="id" value = "<%= users.getId() > 0 ? users.getId():""%>" >
+		                                	<input type="hidden" name="action" value="<%= users.getId() > 0 ? "update" : "create"%>">
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	<label class="">First Name </label>
-		                                        <input type="text" class="form-control" name="firstname" value="" placeholder="First Name">
+		                                        <input " type="text" class="form-control" name="firstname" 
+		                                        value="<%= users.getFisrtname() == null ? "":users.getFisrtname()%>" placeholder="First Name">
 		                                        <label class="">Last Name </label>
-		                                        <input type="text" class="form-control" name="lastname" value="" placeholder="Last Name">
+		                                        <input required type="text" class="form-control" name="lastname" 
+		                                        value="<%= users.getLastname() == null ? "":users.getLastname()%>" placeholder="Last Name">
 		                                        <label class="">Birthday</label>
-		                                        <input type="date" class="form-control" name="birthday" placeholder = "mm/dd/yyyy">
+		                                        <input type="date" class="form-control" name="birthday" 
+		                                        value="<%= users.getBirthday() == null ? "":users.getBirthday()%>" placeholder = "mm/dd/yyyy">
+		                                        
 		                                        <label class="">Status </label>
 		                                        <% List<Userstatus> userStatus = (List<Userstatus>)request.getAttribute("userStatus");%>
-		                                        <select class="form-control" name="idstatus">
-		                                        	
-													<option value="0" >Select a status</option>
+		                                        <select required class="form-control" name="idstatus">
+													<option value="" >Select a status</option>
 													<% for(Userstatus status : userStatus){ %>
           											<option <%if(status.getId() == users.getIduserstatus()){ %>selected = "selected" <%} 
           											%> value="<%= status.getId() %>"><%= status.getTitle()%></option>
@@ -97,13 +101,24 @@
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
 		                                        <label class="">Login </label>
-		                                        <input type="text" class="form-control" name="login" value="">
+		                                        <input required type="text" <%= users.getId() > 0 ? "disabled":""%> class="form-control" name="login" 
+		                                        value="<%= users.getLogin() == null ? "":users.getLogin()%>">
 		                                        <label class="">Password </label>
-		                                        <input type="password" class="form-control" name="password" value="" placeholder="Password">
+		                                        <input required type="password" class="form-control" name="password" 
+		                                        value="<%= users.getPassword() == null ? "":users.getPassword()%>" placeholder="Password">
+		                                        <%if(users.getId() != 0){ %>
+			                                        <label class="">New Password </label>
+			                                        <input type="password" class="form-control" name="newpassword" 
+			                                        value="" placeholder="New Password">
+			                                        <label class="">Repeat Password </label>
+			                                        <input type="password" class="form-control" name="repeatpassword" 
+			                                        value="" placeholder="Repeat Password">
+		                                        <%} %>
+		                                        
 		                                        <label class="">Role </label>
 		                                        <% List<Usersrole> userRoles = (List<Usersrole>)request.getAttribute("userRoles");%>
-		                                        <select class="form-control" name="idrole">
-													<option value="0">Select a role</option>
+		                                        <select required class="form-control" name="idrole">
+													<option value="">Select a role</option>
 													<% for(Usersrole role : userRoles){ %>
           											<option <%if(role.getId() == users.getIdusersrole()){ %>selected = "selected" <%} 
           											%> value="<%= role.getId() %>"><%= role.getTitle()%></option>

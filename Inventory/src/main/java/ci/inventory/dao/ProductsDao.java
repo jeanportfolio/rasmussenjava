@@ -7,13 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IProductsDao;
 import ci.inventory.entity.Products;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 /**
  * {@summary This class is for managing the products operations} 
@@ -21,7 +22,8 @@ import ci.inventory.utility.log.Logging;
  */
 public class ProductsDao implements IProductsDao{
 	private Connection con = DbConnection.getConnection();
-	private static Logger logManager = Logging.setLoggerName(ProductsDao.class.getName());
+	//private static Logger logManager = Logging.setLoggerName(ProductsDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(UsersDao.class.getName());
 
 	//Method to create an occurrence of a Product
 	@Override
@@ -49,7 +51,7 @@ public class ProductsDao implements IProductsDao{
 			logManager.log(Level.INFO, "Products created");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -57,7 +59,7 @@ public class ProductsDao implements IProductsDao{
 				pstmt.close();
 			} catch (Exception e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -67,7 +69,7 @@ public class ProductsDao implements IProductsDao{
 	//Method to get an occurrence of a Product
 	@Override
 	public Products getById(int id) {
-		String req = "SELECT * FROM products";
+		String req = "SELECT * FROM products WHERE id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; 
 		Products products = null;
@@ -75,6 +77,7 @@ public class ProductsDao implements IProductsDao{
 		try {
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req);
+			pstmt.setInt(1, id);
 			
 			rs = pstmt.executeQuery();
 			
@@ -96,7 +99,7 @@ public class ProductsDao implements IProductsDao{
 			logManager.log(Level.INFO, "Products with id "+ id + " retrieved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -104,7 +107,7 @@ public class ProductsDao implements IProductsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -114,8 +117,8 @@ public class ProductsDao implements IProductsDao{
 	//Method to update an occurrence of a Product
 	@Override
 	public Products update(Products products) {
-		String req = "UPDATE products (designation = ?, description = ?, price = ?, saleprice = ?, idcategory = ?"
-				+ "iduser =? WHERE id = ?";
+		String req = "UPDATE products SET designation = ?, description = ?, price = ?, saleprice = ?, idcategory = ?,"
+				+ "idusers =? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
 		
@@ -138,14 +141,14 @@ public class ProductsDao implements IProductsDao{
 			logManager.log(Level.INFO, "Products saved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -169,14 +172,14 @@ public class ProductsDao implements IProductsDao{
 			logManager.log(Level.INFO, "Products with id "+ id + " deleted");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return -1;
 		}finally {
 			try {
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -216,7 +219,7 @@ public class ProductsDao implements IProductsDao{
 			logManager.log(Level.INFO, "Products list retrieved");
 		} catch (SQLException e) {
 			System.err.println("Error "+ e.getMessage());
-			logManager.log(Level.SEVERE, e.getMessage(), e);
+			logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			return null;
 		}finally {
 			try {
@@ -224,7 +227,7 @@ public class ProductsDao implements IProductsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

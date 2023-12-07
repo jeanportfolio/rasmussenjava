@@ -2,7 +2,9 @@ package ci.inventory.entity;
 
 import java.time.LocalDateTime;
 
-public class Stoct_movement {
+import ci.inventory.services.UsersService;
+
+public class Stock_movement {
 	
 	//Properties
 	private int id;
@@ -12,10 +14,10 @@ public class Stoct_movement {
 	private LocalDateTime modifydate;
 	
 	//Constructors
-	public Stoct_movement() {
+	public Stock_movement() {
 		super();
 	}
-	public Stoct_movement(Integer id, String title, Integer idusers) {
+	public Stock_movement(Integer id, String title, Integer idusers) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -28,6 +30,9 @@ public class Stoct_movement {
 	}
 	
 	//Getters and Setters
+	public Users getUser() {
+		return  new UsersService().get(idusers);
+	}
 	public int getId() {
 		return id;
 	}

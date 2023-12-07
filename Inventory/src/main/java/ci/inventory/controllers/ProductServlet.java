@@ -11,14 +11,8 @@ import ci.inventory.entity.Message;
 import ci.inventory.entity.Products;
 import ci.inventory.entity.TypeMessage;
 import ci.inventory.entity.Users;
-import ci.inventory.entity.Usersrole;
-import ci.inventory.entity.Userstatus;
 import ci.inventory.services.CategoryproductService;
 import ci.inventory.services.ProductsService;
-import ci.inventory.services.UsersService;
-import ci.inventory.services.UsersroleService;
-import ci.inventory.services.UserstatusService;
-import ci.inventory.utility.PasswordEncryption;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +25,6 @@ import jakarta.servlet.http.HttpSession;
 public class ProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
-	private UsersService serviveUsers;
 	private CategoryproductService serviceCategory;
 	private ProductsService serviceProduct;
 
@@ -40,7 +33,6 @@ public class ProductServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		System.out.println("init du LoginServlet");
-		serviveUsers = new UsersService();
 		serviceCategory = new CategoryproductService();
 		serviceProduct = new ProductsService();
 	}
@@ -48,9 +40,9 @@ public class ProductServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		session = request.getSession(false);
-		String list = request.getParameter("list");
+		String action = request.getParameter("action");
 
-		System.out.println("list users : "+ list);
+		System.out.println("action : "+ action);
 		if(session == null) {
 			System.out.println("La session /user null / "+ session);
 			request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -61,22 +53,27 @@ public class ProductServlet extends HttpServlet {
 			System.out.println("La session non null /user user null / "+ session);
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		}else {
-			//Check if the request concern a list or an add
-			if(list == null) {
-				List<Categoryproduct> categories = serviceCategory.getAll();
+			//Check if the request concern a list or a data persistence
+			if(action == null) {
+				List<Categoryproduct> listcategories = serviceCategory.getAll();
 
 				request.setAttribute("product", new Products());
-				request.setAttribute("categories", categories);
+				request.setAttribute("listcategories", listcategories);
 				
 				request.getRequestDispatcher("product.jsp").forward(request, response);
-			}else if(list.equals("profil")){
+			}else if(action.equals("list")){
 				
-				request.setAttribute("product", new Products());
-				request.getRequestDispatcher("product.jsp").forward(request, response);
-			}else {
 				List<Products> listproduct = serviceProduct.getAll();
 				request.setAttribute("listproduct", listproduct);
 				request.getRequestDispatcher("productlist.jsp").forward(request, response);
+			}else {
+				int id = Integer.parseInt(request.getParameter("id"), 10);
+				List<Categoryproduct> listcategories = serviceCategory.getAll();
+
+				Products product = serviceProduct.get(id);
+				request.setAttribute("product", product);
+				request.setAttribute("listcategories", listcategories);
+				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}
 		}
 
@@ -99,19 +96,17 @@ public class ProductServlet extends HttpServlet {
 
 			Users user = (Users)session.getAttribute("user");
 
+			List<Categoryproduct> listcategories = serviceCategory.getAll();
 
-			List<Categoryproduct> categories = serviceCategory.getAll();
-
-			request.setAttribute("users", new Users());
-			request.setAttribute("categories", categories);
+			Products product = new Products();
 			Message message;
 			Boolean errorfield = false;
 			StringBuffer errormessage = new StringBuffer();
 
 			String designation = request.getParameter("designation");
 			String description = request.getParameter("description");
-			BigDecimal price = new BigDecimal(request.getParameter("birthday"));
-			BigDecimal saleprice = new BigDecimal(request.getParameter("login"));
+			BigDecimal price = new BigDecimal(request.getParameter("price"));
+			BigDecimal saleprice = new BigDecimal(request.getParameter("saleprice"));
 			
 			int idcategory = Integer.parseInt(request.getParameter("idcategory"), 10); 
 
@@ -143,120 +138,39 @@ public class ProductServlet extends HttpServlet {
 			if(errorfield) {
 				message = new Message(TypeMessage.error, "Please check the required fields ! " + errormessage);
 
-				request.setAttribute("categories", categories);
+				request.setAttribute("listcategories", listcategories);
 				request.setAttribute("message", message);
+				request.setAttribute("product", product);
 				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}else {
-				Products product = new Products();
 				
+				String action = request.getParameter("action");
 				product.setDesignation(designation);
 				product.setDescription(description);
 				product.setPrice(price);
 				product.setSaleprice(saleprice);
 				product.setIdcategory(idcategory);
 				product.setIdusers(user.getId());
-
-				serviceProduct.create(product);
-
-				message = new Message(TypeMessage.success, "User created successfully !");
-
-						
+				
+				//Check if the action to perform is an update or insertion
+				if(action.equals("create")) {
+					serviceProduct.create(product);
+					message = new Message(TypeMessage.success, "product created successfully !");
+				}else {
+					
+					int id = Integer.parseInt(request.getParameter("id"), 10);
+					product.setId(id);
+					serviceProduct.update(product);
+					message = new Message(TypeMessage.success, "product updated successfully !");
+				}
+				
 				request.setAttribute("message", message);
-				request.setAttribute("categories", categories);
+				request.setAttribute("product", product);
+				request.setAttribute("listcategories", listcategories);
 				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}
 		}
 
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession(false);
-		if(session == null) {
-			System.out.println("La session /user null / "+ session);
-			request.getRequestDispatcher("login.jsp").forward(request, response);
-		}else if(!request.isRequestedSessionIdValid()){
-			System.out.println("La session non nul /user isRequestedSessionIdValid() / "+ session);
-			request.getRequestDispatcher("login.jsp").forward(request, response);
-		}else if(session.getAttribute("user") == null) {
-			System.out.println("La session non null /user user null / "+ session);
-			request.getRequestDispatcher("login.jsp").forward(request, response);
-		}else {
-
-			Users user = (Users)session.getAttribute("user");
-			Users updateUser = new Users();
-			List<Categoryproduct> categories = serviceCategory.getAll();
-			Message message;
-
-			String firstname = request.getParameter("firstname");
-			String lastname = request.getParameter("lastname");
-			String birthday = request.getParameter("birthday");
-			String login = request.getParameter("login");
-			String password = request.getParameter("password");
-			int idrole = Integer.parseInt(request.getParameter("idrole"), 10); 
-			int idstatus = Integer.parseInt(request.getParameter("idstatus"), 10);
-
-			String oldpwd = request.getParameter("oldpwd");
-			String newpwd = request.getParameter("newpwd") == null ? "" : request.getParameter("newpwd");
-			String repeatpwd = request.getParameter("repeatpwd") == null ? "" : request.getParameter("repeatpwd");
-
-			try {
-				updateUser = serviveUsers.connect(user.getLogin(), PasswordEncryption.encrypt(oldpwd));
-			} catch (Exception e1) {
-				System.out.println("Error while encrypting the password: "+ e1.getMessage());
-			}
-
-			if(updateUser != null) {
-				if(newpwd.isEmpty()) {
-					updateUser.setFisrtname(firstname);
-					updateUser.setLastname(lastname);
-					updateUser.setBirthday(birthday);
-					updateUser.setLogin(login);
-					updateUser.setIdusersrole(idrole);
-					updateUser.setIduserstatus(idstatus);
-					updateUser.setIdusers(user.getId());
-
-					serviveUsers.update(user);
-					user.setPassword("");
-
-					message = new Message(TypeMessage.success, "User updated successfully !");
-				}else if(newpwd.equals(repeatpwd)){
-					try {
-						updateUser.setFisrtname(firstname);
-						updateUser.setLastname(lastname);
-						updateUser.setBirthday(birthday);
-						updateUser.setLogin(login);
-						updateUser.setIdusersrole(idrole);
-						updateUser.setIduserstatus(idstatus);
-						updateUser.setIdusers(user.getId());
-						updateUser.setPassword(PasswordEncryption.encrypt(password));
-
-						serviveUsers.update(updateUser);
-						user.setPassword("");
-
-						message = new Message(TypeMessage.success, "User updated successfully !");
-					} catch (Exception e) {
-
-						System.out.println("Error while encrypting the password: "+ e.getMessage());
-						message = new Message(TypeMessage.error, "Update IMPOSSIBLE, please conctat the administrator !!!");
-
-					}
-					request.setAttribute("message", message);
-					request.setAttribute("categories", categories);
-					request.getRequestDispatcher("product.jsp").forward(request, response);
-
-				}else {
-					message = new Message(TypeMessage.warning, "Check, The new password is different to the repeat password !");
-				}
-
-			}else {
-				message = new Message(TypeMessage.error, "Password incorrect, please try again !");
-			}
-			request.setAttribute("message", message);
-			request.setAttribute("categories", categories);
-
-			request.getRequestDispatcher("userprofil.jsp").forward(request, response);
-		}
 	}
 
 	public void destroy() {

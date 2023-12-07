@@ -1,3 +1,4 @@
+<%@page import="ci.inventory.entity.Products"%>
 <%@page import="ci.inventory.entity.Users"%>
 <%@page import="java.util.List"%>
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
@@ -71,29 +72,26 @@
                 <table id="myTable" class="table table-striped table-bordered display no-wrap" style="width:100%">
 			    <thead>
 			        <tr>
-			            <th>Login</th>
-			            <th>First name</th>
-			            <th>Last name</th>
-			            <th>Birthday</th>
-			            <th>Role</th>
-			            <th>Status</th>
-
+			            <th>Designation</th>
+			            <th>Price</th>
+			            <th>Sale price</th>
+			            <th>Category</th>
+			            <th>Description</th>
 			            <th>Action</th>
 			        </tr>
 			    </thead>
 			    <tbody>
 			    
-			    <% List<Users> listusers = (List<Users>)request.getAttribute("listusers");%>
-			  		<% for(Users user : listusers){ %>
+			    <% List<Products> listproduct = (List<Products>)request.getAttribute("listproduct");%>
+			  		<% for(Products product : listproduct){ %>
 			        <tr>
-			            <td><%= user.getLogin() %></td>
-			            <td><%= user.getFisrtname()%></td>
-			            <td><%= user.getLastname() %></td>
-			            <td><%= user.getBirthday()%></td>
-			            <td><%= user.getRole().getTitle()%></td>
-			            <td><%= user.getStatus().getTitle()%></td>
+			            <td><%= product.getDesignation() %></td>
+			            <td><%= product.getPrice()%></td>
+			            <td><%= product.getSaleprice() %></td>
+			            <td><%= product.getCategory().getTitle()%></td>
+			            <td><%= product.getDescription()%></td>
 			            <td>
-			            	<a class="btn" href="/users?id=<%= user.getId()%>">Edit</a>
+			            	<a class="btn" href="product?action=update&id=<%= product.getId()%>">Edit</a>
 			            </td>
 			        </tr>
 			    <% } %>

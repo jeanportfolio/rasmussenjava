@@ -93,7 +93,7 @@ public class UsersDao implements IUsersDao{
 				users.setLastname(rs.getString("lastname"));
 				users.setIduserstatus(rs.getInt("iduserstatus"));
 				users.setIdusersrole(rs.getInt("idusersrole"));
-				users.setIdusers(rs.getInt("dusers"));
+				users.setIdusers(rs.getInt("idusers"));
 				users.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				users.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				
@@ -125,7 +125,7 @@ public class UsersDao implements IUsersDao{
 	@Override
 	public Users update(Users users) {
 		String req = "UPDATE users SET login = ? , password = ?, fisrtname = ?, lastname = ?, birthday = ?, idusersrole = ?,"
-				+ " iduserstatus = ?, idusers = ?) WHERE id = ?";
+				+ " iduserstatus = ?, idusers = ? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
 		

@@ -7,21 +7,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IStockorderDao;
 import ci.inventory.entity.Stockorder;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 public class StockorderDao implements IStockorderDao{
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(StockorderDao.class.getName());
+	//private Logger logManager = Logging.setLoggerName(StockorderDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(StockorderDao.class.getName());
 
 	@Override
 	public Stockorder create(Stockorder stockorder) {
-		String req = "INSERT INTO stockorder (totalamount, idsuppliers, idusers) VALUES (?,?,?)";
+		String req = "INSERT INTO stockorder (totalamount, idsuppliers, stockordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
@@ -30,7 +32,8 @@ public class StockorderDao implements IStockorderDao{
 			pstmt = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setBigDecimal(1, stockorder.getTotalamount());
 			pstmt.setInt(2, stockorder.getIdsuppliers());
-			pstmt.setInt(3, stockorder.getIdusers());
+			pstmt.setString(3, stockorder.getStockordernumber());
+			pstmt.setInt(4, stockorder.getIdusers());
 			
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
@@ -42,10 +45,10 @@ public class StockorderDao implements IStockorderDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -54,7 +57,7 @@ public class StockorderDao implements IStockorderDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -71,7 +74,7 @@ public class StockorderDao implements IStockorderDao{
 		try {
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req);
-			
+			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -79,6 +82,7 @@ public class StockorderDao implements IStockorderDao{
 				
 				stockorder.setId(rs.getInt("id"));
 				stockorder.setTotalamount(rs.getBigDecimal("totalamount"));
+				stockorder.setStockordernumber("stockordernumber");
 				stockorder.setIdsuppliers(rs.getInt("idsuppliers"));
 				stockorder.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				stockorder.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
@@ -90,10 +94,10 @@ public class StockorderDao implements IStockorderDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -102,7 +106,7 @@ public class StockorderDao implements IStockorderDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -111,7 +115,7 @@ public class StockorderDao implements IStockorderDao{
 
 	@Override
 	public Stockorder update(Stockorder stockorder) {
-		String req = "UPDATE stockorder SET totalamount = ?, idsuppliers=?, idusers=?) WHERE id = ?";
+		String req = "UPDATE stockorder SET totalamount = ?, idsuppliers=?, stockordernumber=? idusers=?) WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result= 0;
 		
@@ -120,8 +124,9 @@ public class StockorderDao implements IStockorderDao{
 			pstmt = con.prepareStatement(req);
 			pstmt.setBigDecimal(1, stockorder.getTotalamount());
 			pstmt.setInt(2, stockorder.getIdsuppliers());
-			pstmt.setInt(3, stockorder.getIdusers());
-			pstmt.setInt(4, stockorder.getId());
+			pstmt.setString(3, stockorder.getStockordernumber());
+			pstmt.setInt(4, stockorder.getIdusers());
+			pstmt.setInt(5, stockorder.getId());
 			
 			pstmt.executeUpdate();
 			if(result == 0)
@@ -131,10 +136,10 @@ public class StockorderDao implements IStockorderDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -142,7 +147,7 @@ public class StockorderDao implements IStockorderDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -166,10 +171,10 @@ public class StockorderDao implements IStockorderDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return -1;
 		}finally {
@@ -177,7 +182,7 @@ public class StockorderDao implements IStockorderDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -202,6 +207,7 @@ public class StockorderDao implements IStockorderDao{
 				
 				stockorder.setId(rs.getInt("id"));
 				stockorder.setTotalamount(rs.getBigDecimal("totalamount"));
+				stockorder.setStockordernumber("stockordernumber");
 				stockorder.setIdsuppliers(rs.getInt("idsuppliers"));
 				stockorder.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				stockorder.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
@@ -214,10 +220,10 @@ public class StockorderDao implements IStockorderDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -226,7 +232,7 @@ public class StockorderDao implements IStockorderDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

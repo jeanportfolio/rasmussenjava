@@ -1,3 +1,4 @@
+<%@page import="ci.inventory.entity.Categoryproduct"%>
 <%@page import="ci.inventory.entity.Users"%>
 <%@page import="ci.inventory.entity.Usersrole"%>
 <%@page import="java.util.List"%>
@@ -73,18 +74,20 @@
 		                        <div class="card">
 		                            <div class="card-body">
 		                                <h4 class="card-title">Category Form</h4>
-		                                <% Users users = (Users)request.getAttribute("users"); %>
-		                                <form class="row" action="users" method="post">
-		                                	<input type="hidden" name = "id" value = "" >
+		                                <% Categoryproduct category = (Categoryproduct)request.getAttribute("category"); %>
+		                                <form class="row" action="category" method="post">
+		                                	<input type="hidden" name = "id" value = "<%= category.getId() > 0 ? category.getId():""%>" >
+		                                	<input type="hidden" name="action" value="<%= category.getId() > 0 ? "update" : "create"%>">
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	<label class="">Title </label>
-		                                        <input type="text" class="form-control" name="title" value="" placeholder="Title">
+		                                        <input required type="text" class="form-control" name="title" 
+		                                        value="<%= category.getTitle() == null ? "": category.getTitle()%>" placeholder="Title">
 		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
 		                                        <label class="">Description </label>
-		                                        <textarea rows="5" class="form-control" name="description"></textarea>
+		                                        <textarea rows="5" class="form-control" name="description" placeholder="Describe the product category"><%= category.getDescription() == null ? "":category.getDescription()%></textarea>
 		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 offset-lg-2 col-md-6 col-lg-4">

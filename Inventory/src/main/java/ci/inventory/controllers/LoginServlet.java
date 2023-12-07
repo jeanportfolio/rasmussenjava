@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		session = request.getSession(false);
 		if (request.getParameter("logout") != null && session != null) {
 			// Disconnection
 
@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+		System.out.println("doPost session login "+session);
 		
 		if (request.getParameter("logout") != null && session != null) {
 			// Disconnect user
@@ -82,10 +83,17 @@ public class LoginServlet extends HttpServlet {
 					request.setAttribute("message", message);
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				} else {
-					session = request.getSession(false);					
+					Message message;
+					session = request.getSession(true);
+					System.out.println("request.getSession(false) " +request.getSession(false));
+					if(session == null) {
+						message = new Message(TypeMessage.error, "Intern Error please try again");
+						request.setAttribute("message", message);
+						request.getRequestDispatcher("login.jsp").forward(request, response);
+					}
 					
-					Message message = new Message(TypeMessage.info, "Welcome "+ user.getFisrtname());
-					
+					message = new Message(TypeMessage.info, "Welcome "+ user.getFisrtname());
+					user.setPassword("");
 					request.setAttribute("message", message);
 					session.setAttribute("user", user);
 					

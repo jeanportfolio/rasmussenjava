@@ -2,6 +2,9 @@ package ci.inventory.entity;
 
 import java.time.LocalDateTime;
 
+import ci.inventory.services.ProductsService;
+import ci.inventory.services.UsersService;
+
 /**
  * {@summary This class is for managing the stock of products data} 
  *
@@ -18,6 +21,8 @@ public class Stockinventory {
 	private int iduser;
 	private LocalDateTime createdate;
 	private LocalDateTime modifydate;
+	private Products product;
+	private Users user;	
 	
 	//Constructors
 	public Stockinventory() {
@@ -43,6 +48,14 @@ public class Stockinventory {
 	}
 	
 	//Getters and Setters
+	
+	
+	public Products getProduct() {
+		return new ProductsService().get(idproduct);
+	}
+	public Users getUser() {
+		return new UsersService().get(iduser);
+	}
 	public int getId() {
 		return id;
 	}

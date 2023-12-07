@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IStockinventoryDao;
 import ci.inventory.entity.Stockinventory;
 import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 /**
  * {@summary This class is for managing the stock of products movements} 
@@ -21,7 +23,7 @@ import ci.inventory.utility.log.Logging;
  */
 public class StockinventoryDao implements IStockinventoryDao{
 	private Connection con = DbConnection.getConnection();
-	private static Logger logManager = Logging.setLoggerName(StockinventoryDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(StockinventoryDao.class.getName());
 
 	//Method to create an occurrence of a stock
 	@Override
@@ -54,10 +56,10 @@ public class StockinventoryDao implements IStockinventoryDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -66,7 +68,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -76,7 +78,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 	//Method to get an occurrence of a stock
 	@Override
 	public Stockinventory getById(int id) {
-		String req = "SELECT * FROM stockinventory";
+		String req = "SELECT * FROM stockinventory WHERE id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; 
 		Stockinventory stockinventory = null;
@@ -84,7 +86,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 		try {
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req);
-			
+			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -95,6 +97,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				stockinventory.setTitle(rs.getString("title"));
 				stockinventory.setMaxstocklevel(rs.getInt("maxstocklevel"));
 				stockinventory.setMinstocklevel(rs.getInt("minstocklevel"));
+				stockinventory.setIdproduct(rs.getInt("idproduct"));
 				stockinventory.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				stockinventory.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				stockinventory.setIduser(rs.getInt("iduser"));
@@ -105,10 +108,10 @@ public class StockinventoryDao implements IStockinventoryDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -117,7 +120,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -127,7 +130,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 	//Method to update an occurrence of a stock
 	@Override
 	public Stockinventory update(Stockinventory stockinventory) {
-		String req = "UPDATE stockinventory (idproduct = ?, availablequantity = ?, title = ?, minstocklevel =?, maxstocklevel =?, "
+		String req = "UPDATE stockinventory SET idproduct = ?, availablequantity = ?, title = ?, minstocklevel =?, maxstocklevel =?, "
 				+ "iduser =? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -152,10 +155,10 @@ public class StockinventoryDao implements IStockinventoryDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -163,7 +166,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -188,10 +191,10 @@ public class StockinventoryDao implements IStockinventoryDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return -1;
 		}finally {
@@ -199,7 +202,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -228,6 +231,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				stockinventory.setTitle(rs.getString("title"));
 				stockinventory.setMaxstocklevel(rs.getInt("maxstocklevel"));
 				stockinventory.setMinstocklevel(rs.getInt("minstocklevel"));
+				stockinventory.setIdproduct(rs.getInt("idproduct"));
 				stockinventory.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				stockinventory.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				stockinventory.setIduser(rs.getInt("iduser"));
@@ -239,10 +243,10 @@ public class StockinventoryDao implements IStockinventoryDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -251,7 +255,7 @@ public class StockinventoryDao implements IStockinventoryDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

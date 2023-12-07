@@ -22,7 +22,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder create(Customersorder customerOrder) {
-		String req = "INSERT INTO customerOrder (totalamount, idcustomers, idusers) VALUES (?,?,?)";
+		String req = "INSERT INTO customerOrder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
@@ -31,7 +31,8 @@ public class CustomersorderDao implements ICustomersorderDao{
 			pstmt = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setBigDecimal(1, customerOrder.getTotalamount());
 			pstmt.setInt(2, customerOrder.getIdcustomers());
-			pstmt.setInt(3, customerOrder.getIdusers());
+			pstmt.setString(3, customerOrder.getCustomerordernumber());
+			pstmt.setInt(4, customerOrder.getIdusers());
 			
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
@@ -75,6 +76,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 				customerOrder.setId(rs.getInt("id"));
 				customerOrder.setTotalamount(rs.getBigDecimal("totalamount"));
 				customerOrder.setIdcustomers(rs.getInt("idcustomers"));
+				customerOrder.setCustomerordernumber(rs.getString("customerordernumber"));
 				customerOrder.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				customerOrder.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				customerOrder.setIdusers(rs.getInt("idusers"));
@@ -100,7 +102,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder update(Customersorder customerOrder) {
-		String req = "UPDATE customerOrder SET totalamount = ?, idcustomers=?, idusers=?) WHERE id = ?";
+		String req = "UPDATE customerOrder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=?) WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result= 0;
 		
@@ -109,8 +111,9 @@ public class CustomersorderDao implements ICustomersorderDao{
 			pstmt = con.prepareStatement(req);
 			pstmt.setBigDecimal(1, customerOrder.getTotalamount());
 			pstmt.setInt(2, customerOrder.getIdcustomers());
-			pstmt.setInt(3, customerOrder.getIdusers());
-			pstmt.setInt(4, customerOrder.getId());
+			pstmt.setString(3, customerOrder.getCustomerordernumber());
+			pstmt.setInt(4, customerOrder.getIdusers());
+			pstmt.setInt(5, customerOrder.getId());
 			
 			pstmt.executeUpdate();
 			if(result == 0)
@@ -180,6 +183,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 				customerOrder.setId(rs.getInt("id"));
 				customerOrder.setTotalamount(rs.getBigDecimal("totalamount"));
 				customerOrder.setIdcustomers(rs.getInt("idcustomers"));
+				customerOrder.setCustomerordernumber(rs.getString("customerordernumber"));
 				customerOrder.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				customerOrder.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				customerOrder.setIdusers(rs.getInt("idusers"));

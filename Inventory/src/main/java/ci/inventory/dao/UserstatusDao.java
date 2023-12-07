@@ -54,7 +54,7 @@ public class UserstatusDao implements IUserstatusDao{
 			try {
 				rs.close();
 				pstmt.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				System.err.println("Error "+ e.getMessage());
 				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
@@ -118,9 +118,9 @@ public class UserstatusDao implements IUserstatusDao{
 			pstmt = con.prepareStatement(req);
 			pstmt.setString(1, userstatus.getTitle());
 			pstmt.setInt(2, userstatus.getIdusers());
-			pstmt.setInt(3, userstatus.getIdusers());
+			pstmt.setInt(3, userstatus.getId());
 			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			if(result == 0)
 				userstatus.setId(0);
 			con.commit();

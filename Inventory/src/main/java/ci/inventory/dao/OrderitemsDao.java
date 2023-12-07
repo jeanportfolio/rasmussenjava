@@ -115,7 +115,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 
 	@Override
 	public Orderitems update(Orderitems orderitems) {
-		String req = "UPDATE orderitems (idproduct =?, idcustomerorder = ?, quantity =?, price =?, iduser =? WHERE id = ?";
+		String req = "UPDATE orderitems SET idproduct =?, idcustomerorder = ?, quantity =?, price =?, iduser =? WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
 		

@@ -76,33 +76,38 @@
 		                            <div class="card-body">
 		                                <h4 class="card-title">Product Form</h4>
 		                                <% Products product = (Products)request.getAttribute("product"); %>
-		                                <form class="row" action="users" method="post">
+		                                <form class="row" action="product" method="post">
+		                                	<input type="hidden" name = "id" value = "<%= product.getId() > 0 ? product.getId():""%>" >
+		                                	<input type="hidden" name="action" value="<%= product.getId() > 0 ? "update" : "create"%>">
+		                                    
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	<label class="">Category </label>
-		                                        <% List<Categoryproduct> categories = (List<Categoryproduct>)request.getAttribute("categories");%>
-		                                        <select class="form-control" name="idstatus">
+		                                        <% List<Categoryproduct> listcategories = (List<Categoryproduct>)request.getAttribute("listcategories");%>
+		                                        <select required class="form-control" name="idcategory">
 		                                        	
-													<option value="0" >Select a status</option>
-													<% for(Categoryproduct category : categories){ %>
-          											<option <%if(product.getIdcategory() == category.getId()){ %>selected = "selected" <%} 
+													<option value="" >Select a status</option>
+													<% for(Categoryproduct category : listcategories){ %>
+          											<option <%if(product.getIdcategory() == category.getId()){ %>selected<%} 
           											%> value="<%= category.getId() %>"><%= category.getTitle()%></option>
 									          		<% } %>
 		                                        </select>
 		                                    	<label class="">Designation </label>
-		                                        <input type="text" class="form-control" name="designation" value="" placeholder="Designation">
+		                                        <input required type="text" class="form-control" name="designation" 
+		                                        value="<%= product.getDesignation() == null ? "": product.getDesignation() %>" placeholder="Designation">
 		                                        
 		                                        <label class="">Price</label>
-		                                        <input type="number" class="form-control" name="birthday" placeholder = "Price">
+		                                        <input required type="number" class="form-control" name="price" 
+		                                        value="<%= product.getPrice() == null ? "": product.getPrice() %>" placeholder = "Price">
 		                                        
 		                                    </div>
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
 		                                    	<label class="">Description </label>
-		                                        <textarea rows="5" class="form-control" name="description" placeholder="Description"></textarea>
+		                                        <textarea rows="5" class="form-control" name="description" 
+		                                        placeholder="Description"><%= product.getDescription() == null ? "":product.getDescription() %></textarea>
 		                                        <label class="">Sale price </label>
-		                                        <input type="text" class="form-control" name="saleprice" value="">
-		                                        
-		                                        
+		                                        <input required type="text" class="form-control" name="saleprice" 
+		                                        value="<%= product.getSaleprice() == null ? "":product.getSaleprice() %>">
 		                                    </div>
 		                                    <div class="form-group col-sm-12 offset-lg-2 col-md-6 col-lg-4">
 		                                    	<button type="reset" class="btn btn-light form-control">Reset</button>

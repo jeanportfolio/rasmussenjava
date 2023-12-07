@@ -3,15 +3,19 @@ package ci.inventory.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ci.inventory.services.UsersService;
+
 public class Stockorder {
 	
 	//Properties
 	private int id;
 	private BigDecimal totalamount;
+	private String stockordernumber;
 	private int idsuppliers;
 	private int idusers;
 	private LocalDateTime createdate;
 	private LocalDateTime modifydate;
+	private Users user;
 	
 	//Constructors
 	public Stockorder() {
@@ -30,12 +34,22 @@ public class Stockorder {
 		return id + " totalamount "+ totalamount+ " idsuppliers "+ idsuppliers + " idusers "+ idusers;
 	}
 	
+	
+	public Users getUser() {
+		return  new UsersService().get(idusers);
+	}
 	//Getters and Setters
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getStockordernumber() {
+		return stockordernumber;
+	}
+	public void setStockordernumber(String stockordernumber) {
+		this.stockordernumber = stockordernumber;
 	}
 	public BigDecimal getTotalamount() {
 		return totalamount;

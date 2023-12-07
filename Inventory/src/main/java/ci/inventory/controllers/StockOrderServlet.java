@@ -1,17 +1,20 @@
 package ci.inventory.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import ci.inventory.entity.Categoryproduct;
 import ci.inventory.entity.Message;
+import ci.inventory.entity.Products;
 import ci.inventory.entity.TypeMessage;
 import ci.inventory.entity.Users;
 import ci.inventory.entity.Usersrole;
 import ci.inventory.entity.Userstatus;
 import ci.inventory.services.CategoryproductService;
+import ci.inventory.services.ProductsService;
 import ci.inventory.services.UsersService;
 import ci.inventory.services.UsersroleService;
 import ci.inventory.services.UserstatusService;
@@ -24,12 +27,13 @@ import jakarta.servlet.http.HttpSession;
 
 
 
-@WebServlet("/category")
-public class CategoryServlet extends HttpServlet {
+@WebServlet("/stockorder")
+public class StockOrderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
 	private UsersService serviveUsers;
 	private CategoryproductService serviceCategory;
+	private ProductsService serviceProduct;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -38,6 +42,7 @@ public class CategoryServlet extends HttpServlet {
 		System.out.println("init du LoginServlet");
 		serviveUsers = new UsersService();
 		serviceCategory = new CategoryproductService();
+		serviceProduct = new ProductsService();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,16 +63,20 @@ public class CategoryServlet extends HttpServlet {
 		}else {
 			//Check if the request concern a list or an add
 			if(list == null) {
+				List<Categoryproduct> categories = serviceCategory.getAll();
+
+				request.setAttribute("product", new Products());
+				request.setAttribute("categories", categories);
 				
-				request.getRequestDispatcher("category.jsp").forward(request, response);
+				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}else if(list.equals("profil")){
 				
-				//request.setAttribute("connectUser", (Users)session.getAttribute("user"));
-				request.getRequestDispatcher("category.jsp").forward(request, response);
+				request.setAttribute("product", new Products());
+				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}else {
-				List<Categoryproduct> listcategory = serviceCategory.getAll();
-				request.setAttribute("listusers", listcategory);
-				request.getRequestDispatcher("categorylist.jsp").forward(request, response);
+				List<Products> listproduct = serviceProduct.getAll();
+				request.setAttribute("listproduct", listproduct);
+				request.getRequestDispatcher("productlist.jsp").forward(request, response);
 			}
 		}
 
@@ -91,50 +100,42 @@ public class CategoryServlet extends HttpServlet {
 			Users user = (Users)session.getAttribute("user");
 
 
-			Users createUser = new Users();
+			List<Categoryproduct> categories = serviceCategory.getAll();
+
+			request.setAttribute("users", new Users());
+			request.setAttribute("categories", categories);
 			Message message;
 			Boolean errorfield = false;
 			StringBuffer errormessage = new StringBuffer();
 
-			String firstname = request.getParameter("firstname");
-			String lastname = request.getParameter("lastname");
-			String birthday = request.getParameter("birthday");
-			String login = request.getParameter("login");
-			String password = request.getParameter("password");
-			int idrole = Integer.parseInt(request.getParameter("idrole"), 10); 
-			int idstatus = Integer.parseInt(request.getParameter("idstatus"), 10);
+			String designation = request.getParameter("designation");
+			String description = request.getParameter("description");
+			BigDecimal price = new BigDecimal(request.getParameter("birthday"));
+			BigDecimal saleprice = new BigDecimal(request.getParameter("login"));
+			
+			int idcategory = Integer.parseInt(request.getParameter("idcategory"), 10); 
 
-			if(firstname.isEmpty()) {
+			if(designation.isEmpty()) {
 				errormessage.append("First name empty,\n");
 				errorfield = true;
 			}
 
-			if(lastname.isEmpty()) {
-				errormessage.append("Last name empty, \n");
+			if(description.isEmpty()) {
+				errormessage.append("Description empty, \n");
 				errorfield = true;
 			}
 
-			if(birthday.isEmpty()) {
-				errormessage.append("Birthday name empty, \n");
+			if(saleprice.equals("")) {
+				errormessage.append("Sale Price empty, \n");
+				errorfield = true;
+			}
+			
+			if(price.equals("")) {
+				errormessage.append("Price empty, \n");
 				errorfield = true;
 			}
 
-			if(login.isEmpty()) {
-				errormessage.append("Login name empty, \n");
-				errorfield = true;
-			}
-
-			if(password.isEmpty()) {
-				errormessage.append("Password name empty, \n");
-				errorfield = true;
-			}
-
-			if(idrole == 0) {
-				errormessage.append("User Role invalid, \n");
-				errorfield = true;
-			}
-
-			if(idstatus == 0) {
+			if(idcategory == 0) {
 				errormessage.append("User Status invalid, \n");
 				errorfield = true;
 			}
@@ -142,30 +143,27 @@ public class CategoryServlet extends HttpServlet {
 			if(errorfield) {
 				message = new Message(TypeMessage.error, "Please check the required fields ! " + errormessage);
 
-				request.setAttribute("users", new Users());
+				request.setAttribute("categories", categories);
 				request.setAttribute("message", message);
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}else {
-				createUser.setFisrtname(firstname);
-				createUser.setLastname(lastname);
-				createUser.setBirthday(birthday);
-				createUser.setLogin(login);
-				try {
-					createUser.setPassword(PasswordEncryption.encrypt(password));
-				} catch (Exception e) {
-					System.out.println("Error while encrypting the password: " + e.getMessage());
-				}
-				createUser.setIdusersrole(idrole);
-				createUser.setIduserstatus(idstatus);
-				createUser.setIdusers(user.getId());
+				Products product = new Products();
+				
+				product.setDesignation(designation);
+				product.setDescription(description);
+				product.setPrice(price);
+				product.setSaleprice(saleprice);
+				product.setIdcategory(idcategory);
+				product.setIdusers(user.getId());
 
-				serviveUsers.create(createUser);
+				serviceProduct.create(product);
 
 				message = new Message(TypeMessage.success, "User created successfully !");
 
-				request.setAttribute("users", new Users());		
+						
 				request.setAttribute("message", message);
-				request.getRequestDispatcher("category.jsp").forward(request, response);
+				request.setAttribute("categories", categories);
+				request.getRequestDispatcher("product.jsp").forward(request, response);
 			}
 		}
 
@@ -187,7 +185,7 @@ public class CategoryServlet extends HttpServlet {
 
 			Users user = (Users)session.getAttribute("user");
 			Users updateUser = new Users();
-			List<Categoryproduct> userRoles = serviceCategory.getAll();
+			List<Categoryproduct> categories = serviceCategory.getAll();
 			Message message;
 
 			String firstname = request.getParameter("firstname");
@@ -244,8 +242,8 @@ public class CategoryServlet extends HttpServlet {
 
 					}
 					request.setAttribute("message", message);
-					request.setAttribute("userRoles", userRoles);
-					request.getRequestDispatcher("category.jsp").forward(request, response);
+					request.setAttribute("categories", categories);
+					request.getRequestDispatcher("product.jsp").forward(request, response);
 
 				}else {
 					message = new Message(TypeMessage.warning, "Check, The new password is different to the repeat password !");
@@ -255,7 +253,8 @@ public class CategoryServlet extends HttpServlet {
 				message = new Message(TypeMessage.error, "Password incorrect, please try again !");
 			}
 			request.setAttribute("message", message);
-			request.setAttribute("userRoles", userRoles);
+			request.setAttribute("categories", categories);
+
 			request.getRequestDispatcher("userprofil.jsp").forward(request, response);
 		}
 	}
