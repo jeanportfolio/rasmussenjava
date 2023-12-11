@@ -3,6 +3,7 @@ package ci.inventory.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ci.inventory.services.CustomersService;
 import ci.inventory.services.UsersService;
 
 public class Customersorder {
@@ -15,7 +16,10 @@ public class Customersorder {
 	private int idusers;
 	private LocalDateTime createdate;
 	private LocalDateTime modifydate;
+	@SuppressWarnings("unused")
 	private Users user;
+	@SuppressWarnings("unused")
+	private Customers customer;
 	
 	// Constructors
 	public Customersorder() {
@@ -40,6 +44,10 @@ public class Customersorder {
 	
 	public int getId() {
 		return id;
+	}
+
+	public Customers getCustomer() {
+		return new CustomersService().get(idcustomers);
 	}
 
 	public String getCustomerordernumber() {

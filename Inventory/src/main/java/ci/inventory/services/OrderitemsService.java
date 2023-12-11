@@ -43,4 +43,10 @@ public class OrderitemsService implements IOrderitemsService{
 
 		return dao.getAll();
 	}
+
+	@Override
+	public List<Orderitems> getAllByCustomerOrder(int idcustomerorder) {
+		
+		return dao.getAllByCustomerOrder(idcustomerorder);
+	}
 }

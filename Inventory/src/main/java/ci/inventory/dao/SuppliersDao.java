@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import ci.inventory.dao.interfaces.ISuppliersDao;
 import ci.inventory.entity.Suppliers;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
 import ci.inventory.utility.log.LoggingLog4j;
 
 public class SuppliersDao implements ISuppliersDao{

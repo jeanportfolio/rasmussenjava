@@ -164,7 +164,7 @@ public class UsersServlet extends HttpServlet {
 				if(errorfield) {
 					message = new Message(TypeMessage.error, "Please check the required fields ! " + errormessage);
 
-					request.setAttribute("users", new Users());
+					request.setAttribute("updateUser", new Users());
 					request.setAttribute("message", message);
 					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);
@@ -187,7 +187,7 @@ public class UsersServlet extends HttpServlet {
 
 					message = new Message(TypeMessage.success, "User created successfully !");
 
-					request.setAttribute("users", new Users());		
+					request.setAttribute("updateUser", new Users());		
 					request.setAttribute("message", message);
 					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);

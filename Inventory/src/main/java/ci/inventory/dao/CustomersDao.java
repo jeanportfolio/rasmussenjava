@@ -15,7 +15,6 @@ import ci.inventory.dao.interfaces.ICustomersDao;
 import ci.inventory.entity.Customers;
 
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
 import ci.inventory.utility.log.LoggingLog4j;
 
 public class CustomersDao implements ICustomersDao{

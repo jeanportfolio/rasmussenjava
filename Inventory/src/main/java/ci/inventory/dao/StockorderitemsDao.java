@@ -8,17 +8,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IStockorderitemsDao;
 import ci.inventory.entity.Stockorderitems;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 public class StockorderitemsDao implements IStockorderitemsDao{
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(StockorderitemsDao.class.getName());
+	//private Logger logManager = Logging.setLoggerName(StockorderitemsDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(StockorderitemsDao.class.getName());
 
 	@Override
 	public Stockorderitems create(Stockorderitems stockorderitems) {
@@ -45,10 +47,10 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -57,7 +59,7 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -96,10 +98,10 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -108,7 +110,7 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -141,10 +143,10 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -152,7 +154,7 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -176,10 +178,10 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return -1;
 		}finally {
@@ -187,7 +189,7 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -226,10 +228,10 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -238,7 +240,58 @@ public class StockorderitemsDao implements IStockorderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return listStockorderitems;
+	}
+	
+	@Override
+	public List<Stockorderitems> getAllByStockorder(int idstockorder) {
+		List<Stockorderitems> listStockorderitems = new ArrayList<>();
+		String req = "SELECT * FROM stockorderitems WHERE idstockorder = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; 
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
+			pstmt.setInt(1, idstockorder);
+			rs = pstmt.executeQuery();
+			Stockorderitems stockorderitems;
+			while(rs.next()) {
+				stockorderitems = new Stockorderitems();
+				
+				stockorderitems.setId(rs.getInt("id"));
+				stockorderitems.setQuantity(rs.getInt("quantity"));
+				stockorderitems.setPrice(rs.getBigDecimal("price"));
+				stockorderitems.setIdproduct(rs.getInt("idproduct"));
+				stockorderitems.setIdstockorder(rs.getInt("idstockorder"));
+				stockorderitems.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				stockorderitems.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				stockorderitems.setIdusers(rs.getInt("idusers"));
+				
+				listStockorderitems.add(stockorderitems);
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

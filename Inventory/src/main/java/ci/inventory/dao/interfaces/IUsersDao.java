@@ -16,4 +16,5 @@ public interface IUsersDao {
 	
 	//More functional features
 	Users connectUser(String login);
+	Users connectUser(String login, String encryptPassword);
 }

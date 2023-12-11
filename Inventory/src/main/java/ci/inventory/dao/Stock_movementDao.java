@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import ci.inventory.dao.interfaces.IStock_movementDao;
 import ci.inventory.entity.Stock_movement;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
 import ci.inventory.utility.log.LoggingLog4j;
 
 public class Stock_movementDao implements IStock_movementDao{

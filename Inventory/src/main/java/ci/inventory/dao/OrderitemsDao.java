@@ -241,4 +241,57 @@ public class OrderitemsDao implements IOrderitemsDao{
 		
 		return listOrderitems;
 	}
+
+	@Override
+	public List<Orderitems> getAllByCustomerOrder(int idcustomerorder) {
+		List<Orderitems> listOrderitems = new ArrayList<>();
+		String req = "SELECT * FROM orderitems WHERE idcustomerorder = ? ";
+		PreparedStatement pstmt = null;
+		
+		ResultSet rs = null; 
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
+			pstmt.setInt(1, idcustomerorder);
+			rs = pstmt.executeQuery();
+			
+			Orderitems orderitems;
+			while(rs.next()) {
+				orderitems = new Orderitems();
+				
+				orderitems.setId(rs.getInt("id"));
+				orderitems.setIdcustomerorder(rs.getInt(""));
+				orderitems.setIdproduct(rs.getInt(""));
+				orderitems.setPrice(rs.getBigDecimal("price"));
+				orderitems.setQuantity(rs.getInt("quantity"));
+				orderitems.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				orderitems.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				orderitems.setIdusers(rs.getInt("idusers"));
+				
+				listOrderitems.add(orderitems);
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.SEVERE, e.getMessage(), e);
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.SEVERE, e.getMessage(), e);
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+		
+		return listOrderitems;
+	}
 }

@@ -15,4 +15,5 @@ public interface IUsersService {
 	List<Users> getAll();
 
 	Users connect(String login, String encryptPassword);
+	Users connect(String login);
 }

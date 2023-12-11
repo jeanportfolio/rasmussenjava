@@ -14,7 +14,7 @@
                 <!-- ============================================================== -->
                 <div class="navbar-brand">
                     <!-- Logo icon -->
-                    <a href="index.html">
+                    <a href="/Inventory">
                         <b class="logo-icon">
                             <!-- Dark Logo icon -->
                             <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
@@ -69,7 +69,7 @@
                                             <div class="btn btn-danger rounded-circle btn-circle"><i
                                                     data-feather="airplay" class="text-white"></i></div>
                                             <div class="w-75 d-inline-block v-middle pl-2">
-                                                <h6 class="message-title mb-0 mt-1">Luanch Admin</h6>
+                                                <h6 class="message-title mb-0 mt-1">Launch Admin</h6>
                                                 <span class="font-12 text-nowrap d-block text-muted">Just see the my new admin!</span>
                                                 <span class="font-12 text-nowrap d-block text-muted">9:30 AM</span>
                                             </div>

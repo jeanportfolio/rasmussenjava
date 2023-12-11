@@ -3,6 +3,7 @@ package ci.inventory.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ci.inventory.services.SuppliersService;
 import ci.inventory.services.UsersService;
 
 public class Stockorder {
@@ -16,6 +17,7 @@ public class Stockorder {
 	private LocalDateTime createdate;
 	private LocalDateTime modifydate;
 	private Users user;
+	private Suppliers suppliers;
 	
 	//Constructors
 	public Stockorder() {
@@ -35,10 +37,16 @@ public class Stockorder {
 	}
 	
 	
+	
+	//Getters and Setters
+	
 	public Users getUser() {
 		return  new UsersService().get(idusers);
 	}
-	//Getters and Setters
+	
+	public Suppliers getSuppliers() {
+		return new SuppliersService().get(idsuppliers);
+	}
 	public int getId() {
 		return id;
 	}

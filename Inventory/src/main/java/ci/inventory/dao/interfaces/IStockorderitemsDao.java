@@ -13,4 +13,5 @@ public interface IStockorderitemsDao {
 	Stockorderitems update(Stockorderitems stockorderitems);
 	int delete(int id);
 	List<Stockorderitems> getAll();
+	List<Stockorderitems> getAllByStockorder(int idstockorder);
 }

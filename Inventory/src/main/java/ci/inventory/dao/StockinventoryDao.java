@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import ci.inventory.dao.interfaces.IStockinventoryDao;
 import ci.inventory.entity.Stockinventory;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
 import ci.inventory.utility.log.LoggingLog4j;
 
 /**

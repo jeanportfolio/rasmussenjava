@@ -5,6 +5,7 @@ import java.util.List;
 
 import ci.inventory.dao.CustomersorderDao;
 import ci.inventory.entity.Customersorder;
+import ci.inventory.entity.Orderitems;
 import ci.inventory.services.interfaces.ICustomersorderService;
 
 public class CustomersorderService implements ICustomersorderService{
@@ -43,5 +44,15 @@ public class CustomersorderService implements ICustomersorderService{
 	public List<Customersorder> getAll() {
 
 		return dao.getAll();
+	}
+
+	@Override
+	public Customersorder create(Customersorder customerorder, List<Orderitems> listorderitem) {
+		return dao.create(customerorder, listorderitem);
+	}
+	
+	@Override
+	public Customersorder update(Customersorder customerorder, List<Orderitems> listorderitem) {
+		return dao.update(customerorder, listorderitem);
 	}
 }

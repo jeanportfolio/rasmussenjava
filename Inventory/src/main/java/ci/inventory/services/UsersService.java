@@ -45,8 +45,13 @@ public class UsersService implements IUsersService{
 	}
 
 	@Override
-	public Users connect(String login, String encryptPassword) {
+	public Users connect(String login) {
 
 		return dao.connectUser(login);
+	}
+	@Override
+	public Users connect(String login, String encryptPassword) {
+
+		return dao.connectUser(login,encryptPassword);
 	}
 }

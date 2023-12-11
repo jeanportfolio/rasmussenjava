@@ -1,4 +1,5 @@
-<%@page import="ci.inventory.entity.Customers"%>
+<%@page import="ci.inventory.entity.Customersorder"%>
+<%@page import="ci.inventory.entity.Products"%>
 <%@page import="ci.inventory.entity.Users"%>
 <%@page import="java.util.List"%>
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
@@ -20,7 +21,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
-    <title>List Customer</title>
+    <title>List Customer Order</title>
     <!-- Custom CSS -->
     <link href="assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
@@ -28,6 +29,7 @@
     <link href="assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
     <!-- Custom CSS -->
     <link href="dist/css/style.min.css" rel="stylesheet">
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -71,21 +73,23 @@
                 <table id="myTable" class="table table-striped table-bordered display no-wrap" style="width:100%">
 			    <thead>
 			        <tr>
-			            <th>Name</th>
-			            <th>Address</th>
-			            <th>Phone</th>
+			            <th>Order Number</th>
+			            <th>Customer</th>
+			            <th>Total amount</th>
+			            <th>Date</th>
+			            <th>Action</th>
 			        </tr>
 			    </thead>
 			    <tbody>
 			    
-			    <% List<Customers> listcustomer = (List<Customers>)request.getAttribute("listcustomer");%>
-			  		<% for(Customers customer : listcustomer){ %>
+			    <% List<Customersorder> liststockorder = (List<Customersorder>)request.getAttribute("liststockorder");%>
+			  		<% for(Customersorder customerorder : liststockorder){ %>
 			        <tr>
-			            <td><%= customer.getCustomername() %></td>
-			            <td><%= customer.getAddress()%></td>
-			            <td><%= customer.getPhone() %></td>
+			            <td><%= customerorder.getCustomer().getCustomername()%></td>
+			            <td><%= customerorder.getTotalamount() %></td>
+			            <td><%= customerorder.getCreatedate()%></td>
 			            <td>
-			            	<a class="btn" href="customer?action=update&id=<%= customer.getId()%>">Edit</a>
+			            	<a class="btn" href="customerorder?action=update&id=<%= customerorder.getId()%>">Edit</a>
 			            </td>
 			        </tr>
 			    <% } %>
@@ -104,7 +108,7 @@
     </div>
     <!-- End Wrapper -->
     <!-- ============================================================== -->
-    <!-- All Jquery -->
+    <!-- All Jquery 
     <script src="assets/libs/jquery/dist/jquery.min.js"></script>-->
     <script src="assets/libs/datatables/js/datatables.min.js"></script>
     <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
@@ -122,12 +126,10 @@
     <script src="assets/extra-libs/c3/c3.min.js"></script>
     
     <script src="assets/libs/chartist/dist/chartist.min.js"></script>
-    
-    <!--Custom JavaScript -->
-    <script src="dist/js/custom.min.js"></script>
-    <!--This page plugins -->
-    <script src="assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <!-- <script src="assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="dist/js/pages/dashboards/dashboard1.min.js"></script> -->
 </body>
 </html>
 <%}%>

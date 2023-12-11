@@ -4,6 +4,7 @@ import java.util.List;
 
 import ci.inventory.dao.StockorderDao;
 import ci.inventory.entity.Stockorder;
+import ci.inventory.entity.Stockorderitems;
 import ci.inventory.services.interfaces.IStockorderService;
 
 public class StockorderService implements IStockorderService{
@@ -42,5 +43,17 @@ public class StockorderService implements IStockorderService{
 	public List<Stockorder> getAll() {
 
 		return dao.getAll();
+	}
+
+	@Override
+	public Stockorder create(Stockorder stockorder, List<Stockorderitems> liststockitems) {
+		return dao.create(stockorder, liststockitems);
+		
+	}
+
+	@Override
+	public Stockorder update(Stockorder stockorder, List<Stockorderitems> liststockitems) {
+		return dao.update(stockorder, liststockitems);
+		
 	}
 }

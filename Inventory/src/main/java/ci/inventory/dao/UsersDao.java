@@ -15,7 +15,7 @@ import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.LoggingLog4j;
 
 public class UsersDao implements IUsersDao{
-	private Connection con = DbConnection.getConnection();
+	private static Connection con = DbConnection.getConnection();
 	//private Logger logManager = Logging.setLoggerName(UsersDao.class.getName());
 	private static Logger logManager = new LoggingLog4j().getLogger(UsersDao.class.getName());
 
@@ -262,6 +262,59 @@ public class UsersDao implements IUsersDao{
 
 	@Override
 	public Users connectUser(String login) {
+		Users users = null;
+		String req = "SELECT * FROM users WHERE login = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con.setAutoCommit(false);
+			
+			pstmt = con.prepareStatement(req);
+			pstmt.setString(1, login);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				users = new Users();
+				
+				users.setId(rs.getInt("id"));
+				users.setLogin(rs.getString("login"));
+				users.setPassword(rs.getString("password"));
+				users.setFisrtname(rs.getString("fisrtname"));
+				users.setBirthday(rs.getString("birthday"));
+				users.setLastname(rs.getString("lastname"));
+				users.setIduserstatus(rs.getInt("iduserstatus"));
+				users.setIdusersrole(rs.getInt("idusersrole"));
+				users.setIdusers(rs.getInt("idusers"));
+				users.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				users.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return users;
+	}
+	@Override
+	public Users connectUser(String login, String encryptPassword) {
 		Users users = null;
 		String req = "SELECT * FROM users WHERE login = ?";
 		PreparedStatement pstmt = null;

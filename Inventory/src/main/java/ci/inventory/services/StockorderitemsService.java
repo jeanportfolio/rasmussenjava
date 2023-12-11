@@ -43,4 +43,9 @@ public class StockorderitemsService implements IStockorderitemsService{
 
 		return dao.getAll();
 	}
+
+	public List<Stockorderitems> getAllByStockorder(int idstockorder) {
+		
+		return dao.getAllByStockorder(idstockorder);
+	}
 }

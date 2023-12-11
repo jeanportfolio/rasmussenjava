@@ -13,4 +13,5 @@ public interface IOrderitemsService {
 	Orderitems update(Orderitems orderitems);
 	int delete(int id);
 	List<Orderitems> getAll();
+	List<Orderitems> getAllByCustomerOrder(int idcustomerorder);
 }
