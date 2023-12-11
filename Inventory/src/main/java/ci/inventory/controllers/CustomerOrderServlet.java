@@ -132,7 +132,7 @@ public class CustomerOrderServlet extends HttpServlet {
 			String[] idproducts = request.getParameterValues("idproduct[]");
 			String[] prices = request.getParameterValues("price[]");
 			String[] quantities = request.getParameterValues("quantity[]");
-			String[] idstockorderitem = request.getParameterValues("idstockorderitem[]");
+			String[] idorderitem = request.getParameterValues("idorderitem[]");
 			
 			if(idproducts.length == 0) {
 				errormessage.append("No Product selected,\n");
@@ -191,7 +191,7 @@ public class CustomerOrderServlet extends HttpServlet {
 					item.setIdcustomerorder(i);
 					item.setPrice(new BigDecimal(prices[i]));
 					item.setQuantity(Integer.parseInt(quantities[i],10 ));
-					item.setId(idstockorderitem[i].isEmpty()?0:Integer.parseInt(idstockorderitem[i], 10));
+					item.setId(idorderitem[i].isEmpty()?0:Integer.parseInt(idorderitem[i], 10));
 					item.setIdusers(user.getId());
 					listorderitem.add(item);
 				}

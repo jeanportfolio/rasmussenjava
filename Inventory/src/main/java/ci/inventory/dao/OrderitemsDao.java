@@ -7,17 +7,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IOrderitemsDao;
 import ci.inventory.entity.Orderitems;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 public class OrderitemsDao implements IOrderitemsDao{
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(OrderitemsDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(OrderitemsDao.class.getName());
 
 	@Override
 	public Orderitems create(Orderitems orderitems) {
@@ -44,10 +45,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -56,7 +57,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -94,10 +95,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -106,7 +107,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -138,10 +139,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -149,7 +150,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -173,10 +174,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return -1;
 		}finally {
@@ -184,7 +185,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -223,10 +224,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -235,7 +236,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		
@@ -276,10 +277,10 @@ public class OrderitemsDao implements IOrderitemsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 			return null;
 		}finally {
@@ -288,7 +289,7 @@ public class OrderitemsDao implements IOrderitemsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
 			}
 		}
 		

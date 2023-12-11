@@ -25,7 +25,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder create(Customersorder customerOrder) {
-		String req = "INSERT INTO customerOrder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
+		String req = "INSERT INTO customersorder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
@@ -62,7 +62,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder getById(int id) {
-		String req = "SELECT * FROM customerOrder WHERE id = ?";
+		String req = "SELECT * FROM customersorder WHERE id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; 
 		Customersorder customerOrder = null;
@@ -105,7 +105,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder update(Customersorder customerOrder) {
-		String req = "UPDATE customerOrder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=?) WHERE id = ?";
+		String req = "UPDATE customersorder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=?) WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result= 0;
 		
@@ -140,7 +140,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public int delete(int id) {
-		String req = "DELETE FROM customerOrder WHERE id = ?";
+		String req = "DELETE FROM customersorder WHERE id = ?";
 		PreparedStatement pstmt = null;
 		int result = 0;
 		try {
@@ -170,7 +170,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 	@Override
 	public List<Customersorder> getAll() {
 		List<Customersorder> listCustomersorder = new ArrayList<>();
-		String req = "SELECT * FROM customerOrder";
+		String req = "SELECT * FROM customersorder";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; 
 		
@@ -213,7 +213,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 
 	@Override
 	public Customersorder create(Customersorder customerorder, List<Orderitems> listorderitem) {
-		String req = "INSERT INTO customerOrder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
+		String req = "INSERT INTO customersorder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
@@ -289,7 +289,77 @@ public class CustomersorderDao implements ICustomersorderDao{
 	
 	@Override
 	public Customersorder update(Customersorder customerorder, List<Orderitems> listorderitem) {
-		// TODO Auto-generated method stub
-		return null;
+		String req = "UPDATE customersorder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=?) WHERE id = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setBigDecimal(1, customerorder.getTotalamount());
+			pstmt.setInt(2, customerorder.getIdcustomers());
+			pstmt.setString(3, customerorder.getCustomerordernumber());
+			pstmt.setInt(4, customerorder.getIdusers());
+			
+			pstmt.executeUpdate();
+			rs = pstmt.getGeneratedKeys();
+			if(rs.next()) {
+				customerorder.setId(rs.getInt(1));
+			}
+			
+			String req2;
+			PreparedStatement pstmt2 = null;
+			for(int i = 0; i < listorderitem.size(); i++) {
+				Orderitems orderitem = listorderitem.get(i);
+				if(orderitem.getId() <= 0)
+                {
+					req2 = "INSERT INTO orderitems (idproduct, idcustomerorder, quantity, price, idusers) VALUES (?,?,?,?,?)";
+					pstmt2 = con.prepareStatement(req2);
+					pstmt2.setInt(1, orderitem.getIdproduct());
+        			pstmt2.setInt(2, orderitem.getIdcustomerorder());
+        			pstmt2.setInt(3, orderitem.getQuantity());
+        			pstmt2.setBigDecimal(4, orderitem.getPrice());
+        			pstmt2.setInt(5, orderitem.getIdusers());
+					
+					pstmt2.executeUpdate();
+                }else{
+                	req2 = "UPDATE orderitems SET idproduct =?, idcustomerorder = ?, quantity =?, price =?, iduser =? WHERE id = ?";
+            		
+                	pstmt2 = con.prepareStatement(req2);
+                	pstmt2.setInt(1, orderitem.getIdproduct());
+        			pstmt2.setInt(2, orderitem.getIdcustomerorder());
+        			pstmt2.setInt(3, orderitem.getQuantity());
+        			pstmt2.setBigDecimal(4, orderitem.getPrice());
+        			pstmt2.setInt(5, orderitem.getIdusers());
+        			pstmt2.setInt(6, orderitem.getId());
+            			
+            		pstmt2.executeUpdate();
+				}
+			}
+			
+			con.commit();
+			System.out.println("Customer order save successfully");
+			logManager.log(Level.INFO, "Customer order save successfully");
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return customerorder;
 	}
 }

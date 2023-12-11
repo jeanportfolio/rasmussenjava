@@ -82,8 +82,8 @@
 			    </thead>
 			    <tbody>
 			    
-			    <% List<Customersorder> liststockorder = (List<Customersorder>)request.getAttribute("liststockorder");%>
-			  		<% for(Customersorder customerorder : liststockorder){ %>
+			    <% List<Customersorder> listcustomerorder = (List<Customersorder>)request.getAttribute("listcustomerorder");%>
+			  		<% for(Customersorder customerorder : listcustomerorder){ %>
 			        <tr>
 			            <td><%= customerorder.getCustomer().getCustomername()%></td>
 			            <td><%= customerorder.getTotalamount() %></td>
