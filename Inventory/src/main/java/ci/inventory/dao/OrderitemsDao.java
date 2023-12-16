@@ -81,8 +81,8 @@ public class OrderitemsDao implements IOrderitemsDao{
 				orderitems = new Orderitems();
 				
 				orderitems.setId(rs.getInt("id"));
-				orderitems.setIdcustomerorder(rs.getInt(""));
-				orderitems.setIdproduct(rs.getInt(""));
+				orderitems.setIdcustomerorder(rs.getInt("idcustomerorder"));
+				orderitems.setIdproduct(rs.getInt("idproduct"));
 				orderitems.setPrice(rs.getBigDecimal("price"));
 				orderitems.setQuantity(rs.getInt("quantity"));
 				orderitems.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
@@ -209,8 +209,8 @@ public class OrderitemsDao implements IOrderitemsDao{
 				orderitems = new Orderitems();
 				
 				orderitems.setId(rs.getInt("id"));
-				orderitems.setIdcustomerorder(rs.getInt(""));
-				orderitems.setIdproduct(rs.getInt(""));
+				orderitems.setIdcustomerorder(rs.getInt("idcustomerorder"));
+				orderitems.setIdproduct(rs.getInt("idproduct"));
 				orderitems.setPrice(rs.getBigDecimal("price"));
 				orderitems.setQuantity(rs.getInt("quantity"));
 				orderitems.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
@@ -262,8 +262,8 @@ public class OrderitemsDao implements IOrderitemsDao{
 				orderitems = new Orderitems();
 				
 				orderitems.setId(rs.getInt("id"));
-				orderitems.setIdcustomerorder(rs.getInt(""));
-				orderitems.setIdproduct(rs.getInt(""));
+				orderitems.setIdcustomerorder(rs.getInt("idcustomerorder"));
+				orderitems.setIdproduct(rs.getInt("idproduct"));
 				orderitems.setPrice(rs.getBigDecimal("price"));
 				orderitems.setQuantity(rs.getInt("quantity"));
 				orderitems.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());

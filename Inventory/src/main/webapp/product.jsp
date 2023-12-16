@@ -100,6 +100,7 @@
 		                                        value="<%= product.getPrice() == null ? "": product.getPrice() %>" placeholder = "Price">
 		                                        
 		                                    </div>
+		                                    
 		                                    <div class="form-group col-sm-12 col-md-6 col-lg-6">
 		                                    	
 		                                    	<label class="">Description </label>
@@ -108,6 +109,21 @@
 		                                        <label class="">Sale price </label>
 		                                        <input required type="text" class="form-control" name="saleprice" 
 		                                        value="<%= product.getSaleprice() == null ? "":product.getSaleprice() %>">
+		                                    </div>
+		                                    <!-- Stock Initialization -->
+		                                    <div class="form-group col-sm-12 col-md-12 col-lg-12">
+		                                    <h2>Optional</h2>
+		                                    	<label class="">Stock Title </label>
+		                                        <input  type="text" class="form-control" name="stocktitle" 
+		                                        value="" placeholder="Stock Title">
+		                                        
+		                                        <label class="">Level Minimum</label>
+		                                        <input type="number" class="form-control" name="minstock" 
+		                                        value="" placeholder = "Minimum in Stock">
+		                                        
+		                                        <label class="">Maximum in Stock</label>
+		                                        <input type="number" class="form-control" name="maxstock" 
+		                                        value="" placeholder = "Price">
 		                                    </div>
 		                                    <div class="form-group col-sm-12 offset-lg-2 col-md-6 col-lg-4">
 		                                    	<button type="reset" class="btn btn-light form-control">Reset</button>
@@ -138,6 +154,12 @@
     <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	
+	    	$('#modal').modal('toggle');
+	    });
+    </script>
     <!-- apps -->
     <script src="dist/js/app-style-switcher.js"></script>
     <script src="dist/js/feather.min.js"></script>

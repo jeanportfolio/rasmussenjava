@@ -30,6 +30,9 @@ public class UsersServlet extends HttpServlet {
 	private UsersService serviveUsers;
 	private UserstatusService serviceUserStatus;
 	private UsersroleService serviceUsersRole;
+	private String INSERT_UPDATE = "users.jsp";
+	private String PROFIL = "userprofil.jsp";
+	private String LIST = "userslist.jsp";
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -65,7 +68,7 @@ public class UsersServlet extends HttpServlet {
 				request.setAttribute("updateUser", new Users());
 				request.setAttribute("userRoles", userRoles);
 
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}else if(action.equals("update")){
 
 				int id = Integer.parseInt(request.getParameter("id"), 10);
@@ -78,15 +81,15 @@ public class UsersServlet extends HttpServlet {
 				request.setAttribute("userStatus", userStatus);
 				request.setAttribute("userRoles", userRoles);
 				request.setAttribute("updateUser", updateUser);
-				request.getRequestDispatcher("users.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}else if(action.equals("profil")){
 
 				//request.setAttribute("connectUser", (Users)session.getAttribute("user"));
-				request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+				request.getRequestDispatcher(PROFIL).forward(request, response);
 			}else {
 				List<Users> listusers = serviveUsers.getAll();
 				request.setAttribute("listusers", listusers);
-				request.getRequestDispatcher("userslist.jsp").forward(request, response);
+				request.getRequestDispatcher(LIST).forward(request, response);
 			}
 		}
 
@@ -168,7 +171,7 @@ public class UsersServlet extends HttpServlet {
 					request.setAttribute("message", message);
 					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);
-					request.getRequestDispatcher("users.jsp").forward(request, response);
+					request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 				}else {
 					createUser.setFisrtname(firstname);
 					createUser.setLastname(lastname);
@@ -191,7 +194,8 @@ public class UsersServlet extends HttpServlet {
 					request.setAttribute("message", message);
 					request.setAttribute("userStatus", userStatus);
 					request.setAttribute("userRoles", userRoles);
-					request.getRequestDispatcher("users.jsp").forward(request, response);
+					request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
+					return;
 				}
 			}else {
 				doPut(request, response);
@@ -204,7 +208,6 @@ public class UsersServlet extends HttpServlet {
 	@Override
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession(false);
-		System.out.println("PUT ");
 
 		Users connectuser = (Users)session.getAttribute("user");
 
@@ -243,14 +246,29 @@ public class UsersServlet extends HttpServlet {
 
 				serviveUsers.update(updateUser);
 				updateUser.setPassword("");
+				message = new Message(TypeMessage.success, "User updated successfully !");
+				System.out.println("Message "+message);
+				request.setAttribute("message", message);
 				
 				//Check if the connected user is the one who has been update and refresh user data in the session
 				if(connectuser.getId() == updateUser.getId())
 				{
 					session.setAttribute("user", updateUser);
+					
+					request.setAttribute("updateUser", updateUser);
+					request.setAttribute("userStatus", userStatus);
+					request.setAttribute("userRoles", userRoles);
+					request.getRequestDispatcher(PROFIL).forward(request, response);
+					return;
 				}
-
-				message = new Message(TypeMessage.success, "User updated successfully !");
+				List<Users> listusers = serviveUsers.getAll();
+				request.setAttribute("listusers", listusers);
+				request.setAttribute("updateUser", updateUser);
+				request.setAttribute("userStatus", userStatus);
+				request.setAttribute("userRoles", userRoles);
+				request.getRequestDispatcher(LIST).forward(request, response);
+				return;
+				
 			}else if(newpassword.equals(repeatpassword)){
 				try {
 					updateUser.setFisrtname(firstname);
@@ -264,14 +282,29 @@ public class UsersServlet extends HttpServlet {
 
 					serviveUsers.update(updateUser);
 					updateUser.setPassword("");
+					message = new Message(TypeMessage.success, "User updated successfully !");
+					System.out.println("Message "+message);
+					request.setAttribute("message", message);
 					
 					//Check if the connected user is the one who has been update and refresh user data in the session
 					if(connectuser.getId() == updateUser.getId())
 					{
 						session.setAttribute("user", updateUser);
+						
+						request.setAttribute("updateUser", updateUser);
+						request.setAttribute("userStatus", userStatus);
+						request.setAttribute("userRoles", userRoles);
+						request.getRequestDispatcher(PROFIL).forward(request, response);
+						return;
 					}
-
-					message = new Message(TypeMessage.success, "User updated successfully !");
+					List<Users> listusers = serviveUsers.getAll();
+					request.setAttribute("listusers", listusers);
+					request.setAttribute("updateUser", updateUser);
+					request.setAttribute("userStatus", userStatus);
+					request.setAttribute("userRoles", userRoles);
+					request.getRequestDispatcher(LIST).forward(request, response);
+					return;
+					
 				} catch (Exception e) {
 
 					System.out.println("Error while encrypting the password: "+ e.getMessage());
@@ -290,7 +323,7 @@ public class UsersServlet extends HttpServlet {
 		request.setAttribute("updateUser", updateUser);
 		request.setAttribute("userStatus", userStatus);
 		request.setAttribute("userRoles", userRoles);
-		request.getRequestDispatcher("userprofil.jsp").forward(request, response);
+		request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 	}
 
 

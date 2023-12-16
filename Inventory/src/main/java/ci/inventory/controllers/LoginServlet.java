@@ -65,6 +65,7 @@ public class LoginServlet extends HttpServlet {
 			session = null;
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		} else {
+			System.out.println("request.isRequestedSessionIdValid() : "+ request.isRequestedSessionIdValid());
 			if (session == null || request.isRequestedSessionIdValid()) {
 				String login = request.getParameter("login");
 				String password = request.getParameter("password");
@@ -73,7 +74,7 @@ public class LoginServlet extends HttpServlet {
 				//Retrieve the user corresponding to the login and password given
 				try {
 					//user = serviveUsers.connect(login, PasswordEncryption.encrypt(password));
-					user = serviveUsers.connect(login, password);
+					user = serviveUsers.connect(login, PasswordEncryption.encrypt(password));
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}

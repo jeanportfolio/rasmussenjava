@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import ci.inventory.dao.interfaces.ICustomersorderDao;
 import ci.inventory.entity.Customersorder;
 import ci.inventory.entity.Orderitems;
+import ci.inventory.services.StockinventoryService;
 import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.LoggingLog4j;
 
@@ -70,7 +71,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 		try {
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req);
-			
+			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -83,7 +84,6 @@ public class CustomersorderDao implements ICustomersorderDao{
 				customerOrder.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
 				customerOrder.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				customerOrder.setIdusers(rs.getInt("idusers"));
-				
 			}
 			con.commit();
 		} catch (SQLException e) {
@@ -216,6 +216,7 @@ public class CustomersorderDao implements ICustomersorderDao{
 		String req = "INSERT INTO customersorder (totalamount, idcustomers, customerordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		StockinventoryService stockinventoryService = new StockinventoryService(); 
 		
 		try {
 			con.setAutoCommit(false);
@@ -233,24 +234,27 @@ public class CustomersorderDao implements ICustomersorderDao{
 			
 			String req2;
 			PreparedStatement pstmt2 = null;
+			
 			for(int i = 0; i < listorderitem.size(); i++) {
 				Orderitems orderitem = listorderitem.get(i);
 				if(orderitem.getId() <= 0)
                 {
-					req2 = "INSERT INTO orderitems (idproduct, idcustomerorder, quantity, price, idusers) VALUES (?,?,?,?,?)";
+					req2 = "INSERT INTO orderitems (idcustomerorder, idproduct, quantity, price, idusers) VALUES (?,?,?,?,?)";
 					pstmt2 = con.prepareStatement(req2);
-					pstmt2.setInt(1, orderitem.getIdproduct());
-        			pstmt2.setInt(2, orderitem.getIdcustomerorder());
+					pstmt2.setInt(1, customerorder.getId());
+        			pstmt2.setInt(2, orderitem.getIdproduct());
         			pstmt2.setInt(3, orderitem.getQuantity());
         			pstmt2.setBigDecimal(4, orderitem.getPrice());
         			pstmt2.setInt(5, orderitem.getIdusers());
 					
 					pstmt2.executeUpdate();
+					stockinventoryService.stockupdate(orderitem.getIdproduct(), (-1) * orderitem.getQuantity(), orderitem.getIdusers());
+					
                 }else{
                 	req2 = "UPDATE orderitems SET idproduct =?, idcustomerorder = ?, quantity =?, price =?, iduser =? WHERE id = ?";
             		
                 	pstmt2 = con.prepareStatement(req2);
-                	pstmt2.setInt(1, orderitem.getIdproduct());
+                	pstmt2.setInt(1, customerorder.getId());
         			pstmt2.setInt(2, orderitem.getIdcustomerorder());
         			pstmt2.setInt(3, orderitem.getQuantity());
         			pstmt2.setBigDecimal(4, orderitem.getPrice());
@@ -259,12 +263,13 @@ public class CustomersorderDao implements ICustomersorderDao{
             			
             		pstmt2.executeUpdate();
 				}
+				
 			}
 			
 			con.commit();
 			System.out.println("Customer order save successfully");
 			logManager.log(Level.INFO, "Customer order save successfully");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
@@ -289,9 +294,8 @@ public class CustomersorderDao implements ICustomersorderDao{
 	
 	@Override
 	public Customersorder update(Customersorder customerorder, List<Orderitems> listorderitem) {
-		String req = "UPDATE customersorder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=?) WHERE id = ?";
+		String req = "UPDATE customersorder SET totalamount = ?, idcustomers=?, customerordernumber = ?, idusers=? WHERE id = ?";
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		
 		try {
 			con.setAutoCommit(false);
@@ -300,11 +304,11 @@ public class CustomersorderDao implements ICustomersorderDao{
 			pstmt.setInt(2, customerorder.getIdcustomers());
 			pstmt.setString(3, customerorder.getCustomerordernumber());
 			pstmt.setInt(4, customerorder.getIdusers());
+			pstmt.setInt(5, customerorder.getId());
 			
-			pstmt.executeUpdate();
-			rs = pstmt.getGeneratedKeys();
-			if(rs.next()) {
-				customerorder.setId(rs.getInt(1));
+			int result = pstmt.executeUpdate();
+			if(result <= 0) {
+				customerorder.setId(0);
 			}
 			
 			String req2;
@@ -313,21 +317,21 @@ public class CustomersorderDao implements ICustomersorderDao{
 				Orderitems orderitem = listorderitem.get(i);
 				if(orderitem.getId() <= 0)
                 {
-					req2 = "INSERT INTO orderitems (idproduct, idcustomerorder, quantity, price, idusers) VALUES (?,?,?,?,?)";
+					req2 = "INSERT INTO orderitems (idcustomerorder, idproduct, quantity, price, idusers) VALUES (?,?,?,?,?)";
 					pstmt2 = con.prepareStatement(req2);
-					pstmt2.setInt(1, orderitem.getIdproduct());
-        			pstmt2.setInt(2, orderitem.getIdcustomerorder());
+					pstmt2.setInt(1, customerorder.getId());
+        			pstmt2.setInt(2, orderitem.getIdproduct());
         			pstmt2.setInt(3, orderitem.getQuantity());
         			pstmt2.setBigDecimal(4, orderitem.getPrice());
         			pstmt2.setInt(5, orderitem.getIdusers());
 					
 					pstmt2.executeUpdate();
                 }else{
-                	req2 = "UPDATE orderitems SET idproduct =?, idcustomerorder = ?, quantity =?, price =?, iduser =? WHERE id = ?";
+                	req2 = "UPDATE orderitems SET idcustomerorder = ?, idproduct =?, quantity =?, price =?, idusers =? WHERE id = ?";
             		
                 	pstmt2 = con.prepareStatement(req2);
-                	pstmt2.setInt(1, orderitem.getIdproduct());
-        			pstmt2.setInt(2, orderitem.getIdcustomerorder());
+                	pstmt2.setInt(1, customerorder.getId());
+        			pstmt2.setInt(2, orderitem.getIdproduct());
         			pstmt2.setInt(3, orderitem.getQuantity());
         			pstmt2.setBigDecimal(4, orderitem.getPrice());
         			pstmt2.setInt(5, orderitem.getIdusers());
@@ -352,7 +356,6 @@ public class CustomersorderDao implements ICustomersorderDao{
 			return null;
 		}finally {
 			try {
-				rs.close();
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());

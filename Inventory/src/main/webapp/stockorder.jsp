@@ -21,7 +21,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
-    <title>Adminmart Template - The Ultimate Multipurpose admin template</title>
+    <title>Stock Order Form</title>
     <!-- Custom CSS -->
     <link href="assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
@@ -38,7 +38,7 @@
 </head>
 
 <body>
-
+	 
     <!-- Preloader - style you can find in spinners.css -->
     <div class="preloader">
         <div class="lds-ripple">
@@ -159,7 +159,7 @@
 		                                    				<td id="total<%=i%>">
 		                                    					<input type="number" required disabled value="<%= stockorderitem.getPrice().intValue() * stockorderitem.getQuantity()%>"/></td>
 		                                    				<td >
-		                                    					<a href="" title="supprimer" id="remove<%= i%>" class="btn btn-danger" >remove</a>
+		                                    					<a href="javascript:void(0)" onclick='removeRow(this)' title="supprimer" id="remove<%= i%>" class="btn btn-danger" >remove</a>
 																<input name="idstockorderitem[]" type="hidden" value="<%=stockorderitem.getId() %>" /></td>
 		                                    			</tr>
 		                                    			<%i++; } %>
@@ -192,7 +192,7 @@
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
     <script type="text/javascript">
-    
+    	var removeRow;
 	    $('document').ready(function(){
 	    	
 	    	"use strict";
@@ -201,7 +201,10 @@
 	    	let totalam = $("#totalam");
 	        let counter = $tbody.children('tr').length;
 	        let datecreation = $("#datecreation");
+	        let removeRowcall = 0;
 	        
+	        //Initiate Modal
+	        $('#modal').modal('toggle');
 	        //Initialize date creation if empty
 	        if(datecreation.val() == ""){
 	        	datecreation.val(new Date().toLocaleDateString("en-US"));
@@ -220,77 +223,12 @@
 	        	alert(prices);
 	        } 
 	    	
-	        // Function to delete row from the table 
-	        //console.log( $("a[id*='remove']"));
-	        function removeRow(){
-	        	$("a[id*='remove']").click(function(e) {
-	        		e.preventDefault();
-					var button_id = $(this).attr("id").slice(6);
-					var idstockorderitem = $(this).next('input').val();
-					var vehicule = $(this).closest("tr").find('td:eq(1) select option:selected').html();
-					let i = 1;
-		        
-					if(idstockorderitem == "")
-					{
-						$("#row"+ button_id).remove();
-						counter = $tbody.children('tr').length + 1;						
-					}
-					/*$("#orders tbody tr").each(function(){
-						
-						$(this).attr("id",'row'+i);
-						$(this).find('td:first-child').html(i);
-						$(this).find('td:last-child a').attr("id","remove"+i);
-						i++;
-					});*/
-				});
-	        }
-	        	
-				/*else{
-					var mes = "Attention association existante !!!<br/>Voulez-vous supprimer le véhicule "+vehicule+" de la flotte ?";
-					$("#mySuppression .modal-body > div").html(mes);
-					$(".modal-body div").attr("class","alert alert-danger fade in");
-					$("#mySuppression").modal();
-					$("#supprim").on("click",function(){
-						$.ajax({
-							url : "PoolServlet?action=ajax&role=supprimer&idasso="+idasso,
-							type : "GET",
-							cache : "false",
-							success : function(reponse){
-								//(reponse.message)
-								},
-							error : function(xhr){//("erreur de suppresion association "+xhr.status+" "+xhr.statusText);
-							}
-						});
-						$("#row"+ button_id).remove();
-						$("#tab_clone  tbody  tr").each(function(){
-							$(this).attr("id",'row'+i);
-							$(this).find('td:first-child').html(i);
-							$(this).find('td:last-child a').attr("id",i);
-							i++;
-						});
-					});
-				} 
-			}	*/
-			
-	        
-	    	//Function to add new row to the table
-	        function addNewRow() {
-	        	
-	        	let $newtr = $("<tr id='row"+counter+"'><td>"+counter+"</td><td><select id='' required class='form-control' name='idproduct[]'>"+
-	        			"<option selected title='' value='' >Select a product</option><% for(Products product : listproduct){ %>"+
-	        			"<option title='<%= product.getPrice()%>' value='<%= product.getId() %>'><%= product.getDesignation()%></option><% } %>"+
-	        			"<select/></td><td><input min='0' name='price[]' required type='number'/></td>"+
-			        	"<td><input min='0' name='quantity[]' required type='number'/></td><td id='total"+counter+"'><input type='text' disabled required/></td>"+
-			        	"<td><a href='' name='remove' title='supprimer' id='remove"+counter+"' class='btn btn-danger' >remove</a><input type='hidden' name='idstockorderitem[]'/></td></tr>" );
-	        	
-	            $tbody.prepend($newtr);
-	        	counter++;
-	        	onchangement();
-	        	removeRow();
-	        }
-	         
-	        const table = new DataTable('#orders',{
-	        			Search: false,
+	    	//Init table
+	        const $table = new DataTable('#orders',{
+	        			title: '<h3>List items</h3>',
+	        			paging: false,
+	        			ordering:  false,
+	        			searching: false,
 	        			columnDefs: [
 	        				{
 	        					orderable: false,
@@ -298,19 +236,183 @@
 	        				}
 	        				]
 	        });
-	         
-	        $('#addRow').click(addNewRow);
-	         
-	        // Automatically add a first row of data if no rows
-	        if(counter < 1)
-	        {
-	        	counter++;
-	        	addNewRow();
-			}else{
+	        
+			// Add a row to the table
+			$('#addRow').click(function() {
+				
 				counter++;
+	        	let $newtr = $("<tr id='row"+counter+"'><td>"+counter+"</td><td><select id='' required class='form-control' name='idproduct[]'>"+
+	        			"<option selected='selected' value='' >Select a product</option><% for(Products product : listproduct){ %>"+
+	        			"<option title='<%= product.getPrice()%>' value='<%= product.getId() %>'><%= product.getDesignation()%></option><% } %>"+
+	        			"<select/></td><td><input min='0' name='price[]' required type='number'/></td>"+
+			        	"<td><input min='0' name='quantity[]' required type='number'/></td><td id='total"+counter+"'><input type='text' disabled required/></td>"+
+			        	"<td><a onclick='removeRow(this)' href='javascript:void(0)' name='remove' title='supprimer' id='remove"+counter+"' class='btn btn-danger' >remove</a>"+
+			        	"<input type='hidden' name='idstockorderitem[]'/></td></tr>" );
+	        	
+	            $tbody.prepend($newtr);
+	            
+	        	totalamount();
+	        	onchangement();
+	        	
+		       	$table.row.add($newtr).draw();
+	        });
+	        
+			// Delete Row
+			removeRow = function (e){
+				// Function to delete row from the table
+				let i = 1;
+				let button_id;
+				let idstockorderitem;
+				let product;
+				console.log("event caller ");
+				console.log(e);
+		        
+				button_id = $(e).attr("id").slice(6);
+				idstockorderitem = $(e).next('input').val();
+				product = $(e).closest("tr").find('td:eq(1) select option:selected').text();
+				
+	        
+				if(idstockorderitem == "")
+				{
+					console.log(idstockorderitem);
+					$("#row"+ button_id).remove();
+					counter = $tbody.children('tr').length;	
+					console.log($("#orders tbody tr").length)
+					$("#orders tbody tr").each(function(){
+						$(this).attr("id",'row'+i);
+						$(this).find('td:first-child').html(i);
+						$(this).find('td:last-child a').attr("id","remove"+i);
+						i++;
+					});
+					$table.row("#row"+ button_id).remove().draw(false);
+				}else{
+					let mes = "Do you really want to delete product "+product+" from the order ?";
+					let rep = confirm(mes);
+					
+					if(rep){
+						$.ajax({
+							url : "stockorderitem?action=delete&id="+idstockorderitem,
+							type : "POST",
+							cache : "false",
+							success : function(response){
+								if(response){
+									$("#row"+ button_id).remove();
+									counter = $tbody.children('tr').length;
+									alert("Suppression Done!");
+									console.log($("#orders tbody tr").length)
+									$("#orders tbody tr").each(function(){
+										$(this).attr("id",'row'+i);
+										$(this).find('td:first-child').html(i);
+										$(this).find('td:last-child a').attr("id","remove"+i);
+										i++;
+									});
+									$table.row("#row"+ button_id).remove().draw(false);
+								}else{
+									alert("Suppression impossible!");
+								}
+								console.log(response);
+							},
+							error : function(xhr){
+								alert("Error suppression impossible!");
+							}
+						});
+					}
+				}
+
+		        
+				return false;
 			}
+			
+			onchangement();
+			//
+			function onchangement(){
+				//Events on change update fields
+		        $("select[name='idproduct[]']").each(function(index){
+		        	//For each product changement the corresponding price is applied
+		        	$(this).on('change', function(e)
+		        	{
+		        		let idproducts = idproductes();
+		        		//console.log("idproducts.size: " + idproducts.length);
+			        	let select = $(this);
+			        	let selectioned = false;
+						let valeur = $(this).children(':selected').val();
+			        	//Browse products selected to avoid duplicate selection
+			        	for(const id of idproducts.values())
+			        	{
+			        		//console.log("Value id  : "+ id);
+			        		if(id == valeur)
+			        		{
+			        			//console.log("option:selected");
+			        			//console.log($("select[name='idproduct[]']>option:selected[value='"+id+"']"));
+			        			if($("select[name='idproduct[]']>option:selected[value='"+id+"']").length == 2 ){
+			        				selectioned = true;
+			        				break;
+			        			}
+			        		}
+			        	}
+		        	
+			        	if(selectioned)
+			        	{
+			        		//console.log("Risk of duplicate: "+ select.find('option:selected').text());
+		        			console.log(select.find('option:first').text());
+		        			console.log(select.find('option:first'));
+		        			select.find('option:first').attr("selected",'selected');
+		        			console.log(select.find('option:selected').text());
+			        	}else
+			        	{
+				        	let price = select.parent().next('td').children('input');
+				        	price.val(select.children(':selected').attr('title'));
+				        	
+				        	let quatity = select.parent().next().next('td').children('input');
+				        	let total = select.parent().next().next().next('td[id*="total"]').children('input');
+				        	
+				        	if(isValid(price.val()) && isValid(quatity.val()))
+				        	{
+				        		total.val(Number(price.val()) * Number(quatity.val()));
+				        	}else{
+				        		total.val("");
+				        	}
+				        	totalAmount.val(totalamount());
+				        	totalam.val(totalamount());
+			        	}
+	        		});
+	        	});
 	        
-	        
+	      		//For each price changement the total is updated
+	        	$("input[name='price[]']").each(function(index){
+			        $(this).on('change blur keyup click', function(e){
+			        	let price = $(this);
+			        	let quatity = price.parent().next('td').children('input');
+			        	let total = price.parent().next().next('td[id*="total"]').children('input');
+			        	
+			        	if(isValid(price.val()) && isValid(quatity.val()))
+			        		total.val(Number(price.val()) * Number(quatity.val()));
+			        	else
+			        		total.val("");
+			        	//console.log(total.val());
+			        	totalAmount.val(totalamount());
+			        	totalam.val(totalamount());
+			        });
+	        	});
+			       
+			    //For each quantity changement the total is updated
+		       	$("input[name='quantity[]']").each(function(index){
+		       		$(this).on('change blur keyup click', function(e){
+			        	let quatity = $(this);
+			        	let price = quatity.parent().prev('td').children('input');
+			        	let total = quatity.parent().next('td[id*="total"]').children('input');
+			        	
+			        	if(isValid(price.val()) && isValid(quatity.val()))
+			        		total.val(Number(price.val()) * Number(quatity.val()));
+			        	else
+			        		total.val("");
+		        		//console.log(total.val());	
+			        	totalAmount.val(totalamount());
+			        	totalam.val(totalamount());
+		        	});
+		        });
+			}
+			
 	        //Check an input value
 	        function isValid(str) {
 	           if (str === "" || str === null || str === undefined) {
@@ -355,104 +457,13 @@
 		        //console.log("after lesid  : "+ lesid.length);
         		
         		return lesid;
-        	};
-        	
-	        //Events on change update fields
-	        function onchangement()
-	        {
-	        	//Product selection
-	        	//Gathering all the selected products 
-				
-		        $("select[name='idproduct[]']").each(function(index)
-		        {
-		        	//For each product changement the corresponding price is applied
-		        	$(this).on('change', function(e)
-		        	{
-		        		let idproducts = idproductes();
-		        		//console.log("idproducts.size: " + idproducts.length);
-			        	let select = $(this);
-			        	let selectioned = false;
-						let valeur = $(this).children(':selected').val();
-			        	//Browse products selected to avoid duplicate selection
-			        	for(const id of idproducts.values())
-			        	{
-			        		//console.log("Value id  : "+ id);
-			        		if(id == valeur)
-			        		{
-
-			        			//console.log("option:selected");
-			        			//console.log($("select[name='idproduct[]']>option:selected[value='"+id+"']"));
-			        			if($("select[name='idproduct[]']>option:selected[value='"+id+"']").length == 2 ){
-			        				selectioned = true;
-			        				break;
-			        			}
-			        		}
-			        	}
-		        	
-			        	if(selectioned)
-			        	{
-			        		//console.log("Risk of duplicate: "+ select.find('option:selected').text());
-		        			alert('Product already selected');
-		        			select.find('option:first').attr("selected",'selected');
-			        	}else
-			        	{
-				        	let price = select.parent().next('td').children('input');
-				        	price.val(select.children(':selected').attr('title'));
-				        	
-				        	let quatity = select.parent().next().next('td').children('input');
-				        	let total = select.parent().next().next().next('td[id*="total"]').children('input');
-				        	
-				        	if(isValid(price.val()) && isValid(quatity.val()))
-				        	{
-				        		total.val(Number(price.val()) * Number(quatity.val()));
-				        	}else{
-				        		total.val("");
-				        	}
-				        	totalAmount.val(totalamount());
-				        	totalam.val(totalamount());
-			        	}
-		        	});
-		        });
-		        
-		      	//For each price changement the total is updated
-		        $("input[name='price[]']").each(function(index){
-			        $(this).on('change blur keyup click', function(e){
-			        	let price = $(this);
-			        	let quatity = price.parent().next('td').children('input');
-			        	let total = price.parent().next().next('td[id*="total"]').children('input');
-			        	
-			        	if(isValid(price.val()) && isValid(quatity.val()))
-			        		total.val(Number(price.val()) * Number(quatity.val()));
-			        	else
-			        		total.val("");
-			        	//console.log(total.val());
-			        	totalAmount.val(totalamount());
-			        	totalam.val(totalamount());
-			        });
-		        });
-		        
-		      //For each quantity changement the total is updated
-		        $("input[name='quantity[]']").each(function(index){
-		        	$(this).on('change blur keyup click', function(e){
-			        	let quatity = $(this);
-			        	let price = quatity.parent().prev('td').children('input');
-			        	let total = quatity.parent().next('td[id*="total"]').children('input');
-			        	
-			        	if(isValid(price.val()) && isValid(quatity.val()))
-			        		total.val(Number(price.val()) * Number(quatity.val()));
-			        	else
-			        		total.val("");
-			        	//console.log(total.val());	
-			        	totalAmount.val(totalamount());
-			        	totalam.val(totalamount());
-		        	});
-		        });
-	        }
-	        
+        	}  
 	    });
     
     
     </script>
+    
+    
     <!-- apps -->
     <script src="dist/js/app-style-switcher.js"></script>
     <script src="dist/js/feather.min.js"></script>

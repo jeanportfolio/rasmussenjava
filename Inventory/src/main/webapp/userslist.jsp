@@ -37,7 +37,6 @@
 </head>
 
 <body>
-
     <!-- Preloader - style you can find in spinners.css -->
     <div class="preloader">
         <div class="lds-ripple">
@@ -93,7 +92,7 @@
 			            <td><%= user.getRole().getTitle()%></td>
 			            <td><%= user.getStatus().getTitle()%></td>
 			            <td>
-			            	<a class="btn" href="/users?id=<%= user.getId()%>">Edit</a>
+			            	<a class="btn" href="users?action=update&id=<%= user.getId()%>">Edit</a>
 			            </td>
 			        </tr>
 			    <% } %>
@@ -118,6 +117,22 @@
     <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	
+	    	$('#modal').modal('toggle');
+	    	const $table = new DataTable('#myTable', {
+	    		dom: 'lBfrtip',
+	            buttons: [
+	                'copyHtml5',
+	                'excelHtml5',
+	                'csvHtml5',
+	                'pdfHtml5',
+	                'print'
+	            ]
+	    	});
+	    });
+    </script>
     <!-- apps -->
     <script src="dist/js/app-style-switcher.js"></script>
     <script src="dist/js/feather.min.js"></script>
@@ -133,9 +148,7 @@
     
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
-    <!--This page plugins -->
-    <script src="assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="dist/js/pages/datatable/datatable-basic.init.js"></script>
+   
 </body>
 </html>
 <%}%>

@@ -68,12 +68,13 @@
 
             <!-- Container fluid  -->
             <div class="container-fluid">
-                <table id="myTable" class="table table-striped table-bordered display no-wrap" style="width:100%">
+                <table id="myTable" class=" display " style="width:100%">
 			    <thead>
 			        <tr>
 			            <th>Name</th>
 			            <th>Address</th>
 			            <th>Phone</th>
+			            <th>Action</th>
 			        </tr>
 			    </thead>
 			    <tbody>
@@ -110,6 +111,23 @@
     <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	
+	    	$('#modal').modal('toggle');
+	    	const $table = new DataTable('#myTable', {
+	    		dom: 'lBfrtip',
+	            buttons: [
+	                'copyHtml5',
+	                'excelHtml5',
+	                'csvHtml5',
+	                'pdfHtml5',
+	                'print'
+	            ]
+	    	});
+	    	
+	    });
+    </script>
     <!-- apps -->
     <script src="dist/js/app-style-switcher.js"></script>
     <script src="dist/js/feather.min.js"></script>
@@ -126,8 +144,6 @@
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
     <!--This page plugins -->
-    <script src="assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="dist/js/pages/datatable/datatable-basic.init.js"></script>
 </body>
 </html>
 <%}%>

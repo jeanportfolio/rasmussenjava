@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,15 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IStockorderDao;
+import ci.inventory.entity.Inventorylogs;
+import ci.inventory.entity.Inventorylogsdetail;
+import ci.inventory.entity.Stock_movement;
+import ci.inventory.entity.Stockinventory;
 import ci.inventory.entity.Stockorder;
 import ci.inventory.entity.Stockorderitems;
+import ci.inventory.services.InventorylogsService;
+import ci.inventory.services.InventorylogsdetailService;
+import ci.inventory.services.StockinventoryService;
 import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.LoggingLog4j;
 
@@ -70,6 +78,10 @@ public class StockorderDao implements IStockorderDao{
 		String req = "INSERT INTO stockorder (totalamount, idsuppliers, stockordernumber, idusers) VALUES (?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		StockinventoryService stockinventoryService = new StockinventoryService();
+		InventorylogsdetailService inventorylogsdetailService = new InventorylogsdetailService();
+		
+		Inventorylogs inventorylogs =  new InventorylogsService().getByDate(LocalDate.now(), stockorder.getIdusers());
 		
 		try {
 			con.setAutoCommit(false);
@@ -78,6 +90,8 @@ public class StockorderDao implements IStockorderDao{
 			pstmt.setInt(2, stockorder.getIdsuppliers());
 			pstmt.setString(3, stockorder.getStockordernumber());
 			pstmt.setInt(4, stockorder.getIdusers());
+			Stock_movement stock_movement = new Stock_movementDao().getNatureMovement("Stock entry");
+			Stockinventory stockinventory;
 			
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
@@ -89,10 +103,13 @@ public class StockorderDao implements IStockorderDao{
 			PreparedStatement pstmt2 = null;
 			for(int i = 0; i < liststockorderitem.size(); i++) {
 				Stockorderitems stockorderitems = liststockorderitem.get(i);
+				Inventorylogsdetail inventorylogsdetail = new Inventorylogsdetail();
+				
+				
 				if(stockorderitems.getId() <= 0)
                 {
 					req2 = "INSERT INTO stockorderitems (idstockorder, idproduct, quantity, price, idusers) VALUES (?,?,?,?,?)";
-					pstmt2 = con.prepareStatement(req2);
+					pstmt2 = con.prepareStatement(req2, Statement.RETURN_GENERATED_KEYS);
 					pstmt2.setInt(1, stockorder.getId());
 					pstmt2.setInt(2, stockorderitems.getIdproduct());
 					pstmt2.setInt(3, stockorderitems.getQuantity());
@@ -100,6 +117,29 @@ public class StockorderDao implements IStockorderDao{
 					pstmt2.setInt(5, stockorderitems.getIdusers());
 					
 					pstmt2.executeUpdate();
+					rs = pstmt2.getGeneratedKeys();
+					if(rs.next()) {
+						stockorderitems.setId(rs.getInt(1));
+					}
+					
+					/*
+					 * stockinventory =
+					 * stockinventoryService.getByIdProduct(stockorderitems.getIdproduct());
+					 * inventorylogsdetail.setDescription("Stock entry Product "+
+					 * stockorderitems.getProduct().getDescription());
+					 * inventorylogsdetail.setIdinventorylogs(inventorylogs.getId());
+					 * inventorylogsdetail.setIdstockmovement(stock_movement.getId());
+					 * inventorylogsdetail.setIdstockorderitem(stockorderitems.getId());
+					 * inventorylogsdetail.setNewstocklevel(stockinventory.getAvailablequantity());
+					 * 
+					 * //Update the stock after an order
+					 * //stockinventoryService.stockupdate(stockorderitems.getIdproduct(),
+					 * stockorderitems.getQuantity(), stockorderitems.getIdusers());
+					 * 
+					 * inventorylogsdetail.setOldstocklevel(stockinventory.getAvailablequantity());
+					 * inventorylogsdetail.setIdusers(stockorder.getIdusers());
+					 * inventorylogsdetailService.create(inventorylogsdetail);
+					 */
                 }else{
                 	req2 = "UPDATE stockorderitems SET idstockorder = ?, idproduct = ?, quantity = ?, price = ?, idusers = ? WHERE id = ?";
             		
@@ -112,13 +152,14 @@ public class StockorderDao implements IStockorderDao{
                 	pstmt2.setInt(6, stockorderitems.getId());
             			
             		pstmt2.executeUpdate();
+            		
 				}
 			}
 			
 			con.commit();
 			System.out.println("Stock order save successfully");
 			logManager.log(Level.INFO, "Stock order save successfully");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
@@ -130,7 +171,7 @@ public class StockorderDao implements IStockorderDao{
 			return null;
 		}finally {
 			try {
-				rs.close();
+				//rs.close();
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
@@ -244,7 +285,7 @@ public class StockorderDao implements IStockorderDao{
 			pstmt.setInt(4, stockorder.getIdusers());
 			pstmt.setInt(5, stockorder.getId());
 			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			if(result == 0) {
 				stockorder.setId(0);
 				throw new Exception("Stock Order inexistant");
@@ -273,7 +314,7 @@ public class StockorderDao implements IStockorderDao{
                 	pstmt2.setInt(3, stockorderitems.getQuantity());
                 	pstmt2.setBigDecimal(4, stockorderitems.getPrice());
                 	pstmt2.setInt(5, stockorderitems.getIdusers());
-                	pstmt2.setInt(5, stockorderitems.getId());
+                	pstmt2.setInt(6, stockorderitems.getId());
             			
             		pstmt2.executeUpdate();
 				}

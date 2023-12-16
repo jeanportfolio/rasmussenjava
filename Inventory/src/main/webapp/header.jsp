@@ -2,7 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% Users connectUser = (Users)session.getAttribute("user"); %>
     <!-- Topbar header - style you can find in pages.scss -->
-    
+     <%@ include file="modals.jsp"%>
     <header class="topbar" data-navbarbg="skin6">
         <nav class="navbar top-navbar navbar-expand-md">
             <div class="navbar-header" data-logobg="skin6">

@@ -13,4 +13,5 @@ public interface IStock_movementDao {
 	Stock_movement update(Stock_movement stoct_movement);
 	int delete(int id);
 	List<Stock_movement> getAll();
+	Stock_movement getNatureMovement(String nature);
 }

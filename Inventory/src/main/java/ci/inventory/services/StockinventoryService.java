@@ -43,4 +43,13 @@ public class StockinventoryService implements IStockinventoryService{
 
 		return dao.getAll();
 	}
+
+	public Stockinventory stockupdate(int idproduct, int quantity, int idusers) throws Exception {
+		return dao.stockupdate(idproduct, quantity, idusers);
+	}
+
+	public Stockinventory getByIdProduct(int idproduct) {
+		// TODO Auto-generated method stub
+		return dao.getByIdProduct(idproduct);
+	}
 }

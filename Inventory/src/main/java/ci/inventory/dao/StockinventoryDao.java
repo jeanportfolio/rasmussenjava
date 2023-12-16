@@ -125,7 +125,109 @@ public class StockinventoryDao implements IStockinventoryDao{
 		
 		return stockinventory;
 	}
+	
+	@Override
+	public Stockinventory getByIdProduct(int idproduct) {
+		String req = "SELECT * FROM stockinventory WHERE idproduct = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; 
+		Stockinventory stockinventory = null;
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
+			pstmt.setInt(1, idproduct);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				stockinventory = new Stockinventory();
+				
+				stockinventory.setId(rs.getInt("id"));
+				stockinventory.setAvailablequantity(rs.getInt("availablequantity"));
+				stockinventory.setTitle(rs.getString("title"));
+				stockinventory.setMaxstocklevel(rs.getInt("maxstocklevel"));
+				stockinventory.setMinstocklevel(rs.getInt("minstocklevel"));
+				stockinventory.setIdproduct(rs.getInt("idproduct"));
+				stockinventory.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				stockinventory.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				stockinventory.setIduser(rs.getInt("iduser"));
+				
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return stockinventory;
+	}
+	
+	@Override
+	public Stockinventory stockupdate(int idproduit, int quantity, int iduser) throws Exception {
+		String req = "UPDATE stockinventory SET availablequantity = ?, iduser = ? WHERE id = ?";
+		PreparedStatement pstmt = null;
+		int result = 0;
+		Stockinventory stockinventory = getByIdProduct(idproduit);
+		
+		//Logic to update the stock
+		
+		if(stockinventory.getAvailablequantity() + quantity < 0) {
+			throw new Exception("Quantity in stock insuffisant: "+stockinventory.getAvailablequantity());
+			
+		}else {
+			stockinventory.setAvailablequantity(stockinventory.getAvailablequantity() + quantity);
+		}
+		
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
 
+			pstmt.setInt(1, stockinventory.getAvailablequantity());
+			pstmt.setInt(2, stockinventory.getIduser());
+			pstmt.setInt(3, stockinventory.getId());
+			
+			pstmt.executeUpdate();
+			
+			if(result == 0)
+				stockinventory.setId(0);
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return stockinventory;
+	}
 	//Method to update an occurrence of a stock
 	@Override
 	public Stockinventory update(Stockinventory stockinventory) {

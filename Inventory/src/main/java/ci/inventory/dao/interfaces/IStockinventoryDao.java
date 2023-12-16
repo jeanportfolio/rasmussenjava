@@ -11,4 +11,6 @@ public interface IStockinventoryDao {
 	Stockinventory update(Stockinventory stockinventory);
 	int delete(int id);
 	List<Stockinventory> getAll();
+	Stockinventory getByIdProduct(int idproduct);
+	Stockinventory stockupdate(int idproduit, int quantity, int iduser) throws Exception;
 }

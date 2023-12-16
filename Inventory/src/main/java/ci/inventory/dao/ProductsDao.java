@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IProductsDao;
 import ci.inventory.entity.Products;
+import ci.inventory.entity.Stockinventory;
 import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.LoggingLog4j;
 
@@ -27,11 +28,14 @@ public class ProductsDao implements IProductsDao{
 
 	//Method to create an occurrence of a Product
 	@Override
-	public Products create(Products products) {
+	public Products create(Products products, Stockinventory stockinventory) {
 		String req = "INSERT INTO products (designation, description, price, saleprice, idcategory, idusers) VALUES (?,?,?,?,?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+		String req1 = "INSERT INTO stockinventory (idproduct, availablequantity, title, minstocklevel, maxstocklevel, iduser) "
+				+ "VALUES (?,?,?,?,?,?)";
+		PreparedStatement pstmt1 = null;
+			
 		try {
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
@@ -47,6 +51,17 @@ public class ProductsDao implements IProductsDao{
 			if(rs.next()) {
 				products.setId(rs.getInt(1));
 			}
+			//Create a Stock inventory every time we are creating a new product
+			pstmt1 = con.prepareStatement(req1);
+			pstmt1.setInt(1, products.getId());
+			pstmt1.setInt(2, stockinventory.getAvailablequantity());
+			pstmt1.setString(3, stockinventory.getTitle());
+			pstmt1.setInt(4, stockinventory.getMinstocklevel());
+			pstmt1.setInt(5, stockinventory.getMaxstocklevel());
+			pstmt1.setInt(6, stockinventory.getIduser());
+			
+			pstmt1.executeUpdate();
+			
 			con.commit();
 			logManager.log(Level.INFO, "Products created");
 		} catch (SQLException e) {

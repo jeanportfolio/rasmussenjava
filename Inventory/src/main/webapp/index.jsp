@@ -33,7 +33,9 @@
 </head>
 
 <body>
-
+	<!-- Left Sidebar - style you can find in sidebar.scss  -->
+       
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
     <!-- Preloader - style you can find in spinners.css -->
     <div class="preloader">
         <div class="lds-ripple">
@@ -340,6 +342,13 @@
     <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
+    
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	
+	    	$('#modal').modal('toggle');
+	    });
+    </script>
     <!-- apps -->
     <script src="dist/js/app-style-switcher.js"></script>
     <script src="dist/js/feather.min.js"></script>

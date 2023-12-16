@@ -15,7 +15,7 @@ import ci.inventory.utility.DbConnection;
 import ci.inventory.utility.log.LoggingLog4j;
 
 public class UsersDao implements IUsersDao{
-	private static Connection con = DbConnection.getConnection();
+	private Connection con = DbConnection.getConnection();
 	//private Logger logManager = Logging.setLoggerName(UsersDao.class.getName());
 	private static Logger logManager = new LoggingLog4j().getLogger(UsersDao.class.getName());
 
@@ -316,7 +316,7 @@ public class UsersDao implements IUsersDao{
 	@Override
 	public Users connectUser(String login, String encryptPassword) {
 		Users users = null;
-		String req = "SELECT * FROM users WHERE login = ?";
+		String req = "SELECT * FROM users WHERE login = ? AND password = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
@@ -325,6 +325,7 @@ public class UsersDao implements IUsersDao{
 			
 			pstmt = con.prepareStatement(req);
 			pstmt.setString(1, login);
+			pstmt.setString(2, encryptPassword);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {

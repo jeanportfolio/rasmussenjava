@@ -23,6 +23,8 @@ public class SuppliersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
 	private SuppliersService serviceSupplier;
+	private static String LIST = "supplierlist.jsp";
+	private static String INSERT_UPDATE = "supplier.jsp";
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -52,18 +54,18 @@ public class SuppliersServlet extends HttpServlet {
 			//Check if the request concern a list or a data persistence
 			if(action == null) {
 				request.setAttribute("supplier", new Suppliers());				
-				request.getRequestDispatcher("supplier.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}else if(action.equals("list")){
 				
 				List<Suppliers> listsupplier = serviceSupplier.getAll();
 				request.setAttribute("listsupplier", listsupplier);
-				request.getRequestDispatcher("supplierlist.jsp").forward(request, response);
+				request.getRequestDispatcher(LIST).forward(request, response);
 			}else {
 				int id = Integer.parseInt(request.getParameter("id"), 10);
 
 				Suppliers supplier = serviceSupplier.get(id);
 				request.setAttribute("supplier", supplier);
-				request.getRequestDispatcher("supplier.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}
 		}
 
@@ -115,7 +117,7 @@ public class SuppliersServlet extends HttpServlet {
 
 				request.setAttribute("message", message);
 				request.setAttribute("supplier", supplier);
-				request.getRequestDispatcher("supplier.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}else {
 				
 				String action = request.getParameter("action");
@@ -138,7 +140,7 @@ public class SuppliersServlet extends HttpServlet {
 				
 				request.setAttribute("message", message);
 				request.setAttribute("supplier", supplier);
-				request.getRequestDispatcher("supplier.jsp").forward(request, response);
+				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}
 		}
 

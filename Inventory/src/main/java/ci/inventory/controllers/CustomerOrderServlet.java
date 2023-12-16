@@ -88,11 +88,11 @@ public class CustomerOrderServlet extends HttpServlet {
 				int id = Integer.parseInt(request.getParameter("id"), 10);
 				List<Products> listproduct = serviceProduct.getAll();
 				List<Customers> listcustomer = serviceCustomer.getAll();
-				List<Orderitems> listorderitem = serviveOrderitem.getAllByCustomerOrder(id);
+				List<Orderitems> listcustomerorderitem = serviveOrderitem.getAllByCustomerOrder(id);
 				Customersorder customerorder = serviveOrder.get(id);
 				
 				request.setAttribute("customerorder", customerorder);
-				request.setAttribute("listorderitem", listorderitem);
+				request.setAttribute("listcustomerorderitem", listcustomerorderitem);
 				request.setAttribute("listproduct", listproduct);
 				request.setAttribute("listcustomer", listcustomer);
 				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
@@ -177,14 +177,14 @@ public class CustomerOrderServlet extends HttpServlet {
 				System.out.println("Erreur "+message.getMessage());
 				request.setAttribute("message", message);
 				request.setAttribute("customerorder", customerorder);
-				request.setAttribute("listorderitem", new ArrayList<Orderitems>());
+				request.setAttribute("listcustomerorderitem", new ArrayList<Orderitems>());
 				request.setAttribute("listproduct", listproduct);
 				request.setAttribute("listcustomer", listcustomer);
 				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);
 			}else {
 				
 				String action = request.getParameter("action");
-				List<Orderitems> listorderitem = new ArrayList<>();
+				List<Orderitems> listcustomerorderitem = new ArrayList<>();
 				for(int i = 0; i < idproducts.length; i++) {
 					Orderitems item = new Orderitems();
 					item.setIdproduct(Integer.parseInt(idproducts[i], 10));
@@ -193,7 +193,7 @@ public class CustomerOrderServlet extends HttpServlet {
 					item.setQuantity(Integer.parseInt(quantities[i],10 ));
 					item.setId(idorderitem[i].isEmpty()?0:Integer.parseInt(idorderitem[i], 10));
 					item.setIdusers(user.getId());
-					listorderitem.add(item);
+					listcustomerorderitem.add(item);
 				}
 				customerorder.setTotalamount(totalamount);
 				if(ordernumber != "")
@@ -206,23 +206,23 @@ public class CustomerOrderServlet extends HttpServlet {
 				//Check if the action to perform is an update or insertion
 				if(action.equals("create")) {
 					
-					serviveOrder.create(customerorder, listorderitem);
+					serviveOrder.create(customerorder, listcustomerorderitem);
 					System.out.println("Stock order created ");
 					message = new Message(TypeMessage.success, "Stock order created successfully !");
 				}else {
 					
 					int id = Integer.parseInt(request.getParameter("id"), 10);
 					customerorder.setId(id);
-					serviveOrder.update(customerorder, listorderitem);
+					serviveOrder.update(customerorder, listcustomerorderitem);
 					System.out.println("Stock order Save ");
 					message = new Message(TypeMessage.success, "Stock order updated successfully !");
 				}
 				
-				listorderitem  = serviveOrderitem.getAllByCustomerOrder(customerorder.getId());
+				listcustomerorderitem  = serviveOrderitem.getAllByCustomerOrder(customerorder.getId());
 				
 				request.setAttribute("message", message);
 				request.setAttribute("customerorder", customerorder);
-				request.setAttribute("listorderitem", listorderitem);
+				request.setAttribute("listcustomerorderitem", listcustomerorderitem);
 				request.setAttribute("listproduct", listproduct);
 				request.setAttribute("listcustomer", listcustomer);
 				request.getRequestDispatcher(INSERT_UPDATE).forward(request, response);

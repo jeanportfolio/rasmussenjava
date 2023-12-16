@@ -232,5 +232,52 @@ public class Stock_movementDao implements IStock_movementDao{
 		
 		return listStoct_movement;
 	}
+
+	@Override
+	public Stock_movement getNatureMovement(String nature) {
+		Stock_movement stoct_movement = null;
+		String req = "SELECT * FROM stoct_movement WHERE title = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
+			pstmt.setString(1, nature);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				stoct_movement = new Stock_movement();
+				
+				stoct_movement.setId(rs.getInt("id"));
+				stoct_movement.setTitle(rs.getString("title"));
+				stoct_movement.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				stoct_movement.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				stoct_movement.setIdusers(rs.getInt("idusers"));
+				
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage(), e.getClass());
+			}
+		}
+		
+		return stoct_movement;
+	}
 	
 }

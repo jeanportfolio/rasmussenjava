@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import ci.inventory.entity.Categoryproduct;
 import ci.inventory.entity.Message;
 import ci.inventory.entity.Products;
+import ci.inventory.entity.Stockinventory;
 import ci.inventory.entity.TypeMessage;
 import ci.inventory.entity.Users;
 import ci.inventory.services.CategoryproductService;
@@ -99,6 +100,7 @@ public class ProductServlet extends HttpServlet {
 			List<Categoryproduct> listcategories = serviceCategory.getAll();
 
 			Products product = new Products();
+			Stockinventory stockinventory = new Stockinventory();
 			Message message;
 			Boolean errorfield = false;
 			StringBuffer errormessage = new StringBuffer();
@@ -107,6 +109,10 @@ public class ProductServlet extends HttpServlet {
 			String description = request.getParameter("description");
 			BigDecimal price = new BigDecimal(request.getParameter("price"));
 			BigDecimal saleprice = new BigDecimal(request.getParameter("saleprice"));
+			
+			int maxstock = Integer.parseInt(request.getParameter("maxstock").isEmpty() ? "10" : request.getParameter("maxstock"), 10);
+			int minstock = Integer.parseInt(request.getParameter("minstock").isEmpty() ? "0" : request.getParameter("minstock"), 10);
+			String stocktitle = request.getParameter("stocktitle");
 			
 			int idcategory = Integer.parseInt(request.getParameter("idcategory"), 10); 
 
@@ -152,9 +158,18 @@ public class ProductServlet extends HttpServlet {
 				product.setIdcategory(idcategory);
 				product.setIdusers(user.getId());
 				
+				
 				//Check if the action to perform is an update or insertion
 				if(action.equals("create")) {
-					serviceProduct.create(product);
+					
+					stockinventory.setAvailablequantity(1);
+					stockinventory.setIdproduct(0);
+					stockinventory.setIduser(user.getId());
+					stockinventory.setMaxstocklevel(maxstock);
+					stockinventory.setMinstocklevel(minstock);
+					stockinventory.setTitle(stocktitle == "" ? "Stock "+designation: stocktitle);
+					
+					serviceProduct.create(product, new Stockinventory());
 					message = new Message(TypeMessage.success, "product created successfully !");
 				}else {
 					

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ci.inventory.dao.ProductsDao;
 import ci.inventory.entity.Products;
+import ci.inventory.entity.Stockinventory;
 import ci.inventory.services.interfaces.IProductsService;
 
 public class ProductsService implements IProductsService{
@@ -15,9 +16,9 @@ public class ProductsService implements IProductsService{
 	}
 	
 	@Override
-	public Products create(Products products) {
+	public Products create(Products products, Stockinventory stockinventory) {
 		
-		return dao.create(products);
+		return dao.create(products, stockinventory);
 	}
 
 	@Override

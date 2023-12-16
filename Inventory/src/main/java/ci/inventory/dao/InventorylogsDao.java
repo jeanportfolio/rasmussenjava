@@ -5,23 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import ci.inventory.dao.interfaces.IInventorylogsDao;
 import ci.inventory.entity.Inventorylogs;
 import ci.inventory.utility.DbConnection;
-import ci.inventory.utility.log.Logging;
+import ci.inventory.utility.log.LoggingLog4j;
 
 public class InventorylogsDao implements IInventorylogsDao{
 	private Connection con = DbConnection.getConnection();
-	private Logger logManager = Logging.setLoggerName(InventorylogsDao.class.getName());
+	//private Logger logManager = Logging.setLoggerName(InventorylogsDao.class.getName());
+	private static Logger logManager = new LoggingLog4j().getLogger(InventorylogsDao.class.getName());
 
 	@Override
 	public Inventorylogs create(Inventorylogs inventorylogs) {
-		String req = "INSERT INTO inventorylogs (title, iduser) VALUES (?,?)";
+		String req = "INSERT INTO inventorylogs (title, idusers) VALUES (?,?)";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
@@ -36,15 +40,15 @@ public class InventorylogsDao implements IInventorylogsDao{
 			if(rs.next()) {
 				inventorylogs.setId(rs.getInt(1));
 			}
-			con.commit();
+			
 		} catch (SQLException e) {
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 			return null;
 		}finally {
@@ -53,13 +57,65 @@ public class InventorylogsDao implements IInventorylogsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 		}
 		
 		return inventorylogs;
 	}
 
+	@Override
+	public Inventorylogs getByDate(LocalDate localdate, int iduser) {
+		Inventorylogs inventorylogs = null;
+		String req = "SELECT * FROM inventorylogs  WHERE createdate LIKE ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; 
+		try {
+			con.setAutoCommit(false);
+			pstmt = con.prepareStatement(req);
+			
+			pstmt.setString(1, "%"+localdate.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				inventorylogs = new Inventorylogs();
+				
+				inventorylogs.setId(rs.getInt("id"));
+				inventorylogs.setTitle(rs.getString("title"));
+				inventorylogs.setCreatedate(rs.getTimestamp("createdate").toLocalDateTime());
+				inventorylogs.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
+				inventorylogs.setIdusers(rs.getInt("idusers"));
+			}else {
+				inventorylogs = new Inventorylogs();
+				inventorylogs.setTitle("Inventory Log of "+ LocalDateTime.now());
+				inventorylogs.setIdusers(iduser);
+				inventorylogs = create(inventorylogs);
+			}
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
+			} catch (SQLException e1) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
+			}
+			return null;
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				System.err.println("Error "+ e.getMessage());
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
+			}
+		}
+		
+		return inventorylogs;
+	}
+	
 	@Override
 	public Inventorylogs getById(int id) {
 		Inventorylogs inventorylogs = null;
@@ -70,7 +126,7 @@ public class InventorylogsDao implements IInventorylogsDao{
 			con.setAutoCommit(false);
 			pstmt = con.prepareStatement(req);
 			
-			pstmt.setInt(1, id);
+			pstmt.setInt(1, id );
 			
 			rs = pstmt.executeQuery();
 			
@@ -83,15 +139,16 @@ public class InventorylogsDao implements IInventorylogsDao{
 				inventorylogs.setModifydate(rs.getTimestamp("modifydate").toLocalDateTime());
 				inventorylogs.setIdusers(rs.getInt("idusers"));
 			}
+			
 			con.commit();
 		} catch (SQLException e) {
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 			return null;
 		}finally {
@@ -100,7 +157,7 @@ public class InventorylogsDao implements IInventorylogsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 		}
 		
@@ -127,10 +184,10 @@ public class InventorylogsDao implements IInventorylogsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 			return null;
 		}finally {
@@ -138,7 +195,7 @@ public class InventorylogsDao implements IInventorylogsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 		}
 		
@@ -163,10 +220,10 @@ public class InventorylogsDao implements IInventorylogsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 			return -1;
 		}finally {
@@ -174,7 +231,7 @@ public class InventorylogsDao implements IInventorylogsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 		}
 		
@@ -210,10 +267,10 @@ public class InventorylogsDao implements IInventorylogsDao{
 			try {
 				con.rollback();
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			} catch (SQLException e1) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 			return null;
 		}finally {
@@ -222,7 +279,7 @@ public class InventorylogsDao implements IInventorylogsDao{
 				pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Error "+ e.getMessage());
-				logManager.log(Level.SEVERE, e.getMessage(), e);
+				logManager.log(Level.ERROR, e.getMessage()+" "+ e.getClass());
 			}
 		}
 		

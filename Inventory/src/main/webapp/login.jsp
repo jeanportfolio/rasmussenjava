@@ -87,9 +87,11 @@
     <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js "></script>
 
     <!-- This page plugin js -->
-
-    <script>
-        $(".preloader ").fadeOut();
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	    	$(".preloader ").fadeOut();
+	    	$('#modal').modal('toggle');
+	    });
     </script>
 </body>
 </html>

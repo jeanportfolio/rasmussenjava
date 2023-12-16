@@ -3,6 +3,7 @@ package ci.inventory.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ci.inventory.services.ProductsService;
 import ci.inventory.services.UsersService;
 
 public class Stockorderitems {
@@ -87,6 +88,10 @@ public class Stockorderitems {
 	}
 	public void setModifydate(LocalDateTime modifydate) {
 		this.modifydate = modifydate;
+	}
+	public Products getProduct() {
+		// TODO Auto-generated method stub
+		return new ProductsService().get(idproduct);
 	}
 	
 	
